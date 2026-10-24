@@ -1,0 +1,10 @@
+name: Geocode once
+on: workflow_dispatch
+permissions:
+  contents: read
+jobs:
+  geo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/geocode_once.py
