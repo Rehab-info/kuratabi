@@ -1,5 +1,4 @@
-/* 蔵旅 by 一献 — デザインの土台は一献(宵藍と月光)と共通。
-   一献の assets/style.css を写し、末尾に「蔵旅」の部品を足しています。一献側の配色を変えたら、ここにも写してください。 */
+/* 蔵旅 — 配色は宵藍と月光。前半が土台の部品、末尾が「蔵旅」の部品です。 */
 :root {
   --bg: #f1efe9;          /* 月白:わずかに暖かい白 */
   --surface: #fbfaf6;
@@ -484,7 +483,10 @@ body::after {
 .rv-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 10px; }
 .rv-note { font-size: 12px; color: var(--muted); margin: 6px 0 0; }
 
-/* ---------- 蔵旅 by 一献 ---------- */
+/* hidden を付けたものは、display を指定した部品でも必ず隠す(絞り込みで使う) */
+[hidden] { display: none !important; }
+
+/* ---------- 蔵旅 ---------- */
 /* 杉玉(酒林)を印に。乾いた杉玉の琥珀を月光の金から引き、藍の地に一点だけ灯す。
    写真のない表紙は、藍の地に青海波を細く引いて、縦書きの銘柄を置く */
 :root {

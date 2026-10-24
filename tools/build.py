@@ -1,8 +1,8 @@
-"""data/kuratabi.json と data/kura.json から「蔵旅 by 一献」のページを作るスクリプト。
+"""data/kuratabi.json と data/kura.json から「蔵旅」のページを作るスクリプト。
 使い方: python3 tools/build.py
 
 旅のしおりを足すときは data/kuratabi.json の trips に1件追加して、このスクリプトを実行してください。
-蔵の名前・見学の可否・創業などは data/kura.json から読み込みます(一献の data/kura.json を写したもの)。
+蔵の名前・見学の可否・創業などは data/kura.json から読み込みます(蔵の一覧のページ kura.html もここから作ります)。
 GitHub に上げると、公開の仕組みでも自動で実行されます。
 assets/ の CSS・JS を直したら、下の VERSION を1つ上げてください(閲覧者のブラウザに古い版が残らなくなります)。
 """
@@ -13,9 +13,8 @@ import sys
 from pathlib import Path
 from urllib.parse import quote
 
-VERSION = "3"
+VERSION = "4"
 SITE = "https://rehab-info.github.io/kuratabi/"  # 蔵旅の住所(独自ドメインに移したらここを直す)
-IKKON = "https://rehab-info.github.io/ikkon/"    # 一献の住所
 LEAFLET = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/"
 # 「泊まるなら」の stay[].rakuten に書けるリンク(楽天トラベルのページか、楽天アフィリエイトの管理画面で作ったリンク)
 RAKUTEN = ("https://travel.rakuten.co.jp/", "https://hotel.travel.rakuten.co.jp/")
@@ -92,8 +91,8 @@ for t in trips:
             all_tags.append(g)
 
 
-def shell(title, desc, body, path, home=False, extra_head="", tail=""):
-    cur = ' aria-current="page"' if home else ""
+def shell(title, desc, body, path, current="", extra_head="", tail=""):
+    cur = ' aria-current="page"'
     return f'''<!doctype html>
 <html lang="ja">
 <head>
@@ -107,7 +106,7 @@ def shell(title, desc, body, path, home=False, extra_head="", tail=""):
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{SITE}{path}">
-<meta property="og:site_name" content="蔵旅 by 一献">
+<meta property="og:site_name" content="蔵旅">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
@@ -116,8 +115,8 @@ def shell(title, desc, body, path, home=False, extra_head="", tail=""):
 <body>
 <header class="site-head">
   <div class="wrap">
-    <a class="logo" href="index.html"><span class="mark" aria-hidden="true"></span><b>蔵旅</b><small>by 一献</small></a>
-    <nav class="nav"><a href="index.html"{cur}>旅のしおり</a><a href="{IKKON}kura.html">宮城の蔵</a><a href="{IKKON}">一献</a></nav>
+    <a class="logo" href="index.html"><span class="mark" aria-hidden="true"></span><b>蔵旅</b><small>酒蔵をたずねる旅</small></a>
+    <nav class="nav"><a href="index.html"{cur if current == "index" else ""}>旅のしおり</a><a href="kura.html"{cur if current == "kura" else ""}>宮城の蔵</a></nav>
   </div>
 </header>
 
@@ -129,7 +128,7 @@ def shell(title, desc, body, path, home=False, extra_head="", tail=""):
   <div class="wrap">
     <span>見学の受け入れや店の営業は変わることがあります。出かける前に必ず各蔵・各施設へ確かめてください。情報は{e(data["checked"])}に確認しました。</span>
     <span>試飲をする日は、電車やバス、運転しない人と。お酒は20歳になってから。飲酒運転は法律で禁止されています。</span>
-{AFFILIATE_NOTE if has_affiliate else ""}    <span>蔵旅は、日本酒案内「<a href="{IKKON}">一献</a>」の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
+{AFFILIATE_NOTE if has_affiliate else ""}    <span>地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
   </div>
 </footer>
 {tail}</body>
@@ -176,7 +175,7 @@ for t in trips:
     kg = kura_geo.get(k["id"])
     label, cls = TOUR[k["tour"]]
     brands = "".join(f"<span>{e(b)}</span>" for b in k["brands"])
-    others = "".join(f'<dt>近くの蔵</dt><dd><a href="{IKKON}kura.html#{e(w)}">{e(kura[w]["name"])}</a>(見学:{TOUR[kura[w]["tour"]][0]})</dd>' for w in t.get("with", []))
+    others = "".join(f'<dt>近くの蔵</dt><dd><a href="kura.html#{e(w)}">{e(kura[w]["name"])}</a>(見学:{TOUR[kura[w]["tour"]][0]})</dd>' for w in t.get("with", []))
 
     # 地図の点:蔵・駅・見どころ(遠いものは地図に入れず一覧だけ)
     markers, n = [], 0
@@ -216,8 +215,8 @@ for t in trips:
     tips = '<ul class="kt-tips">' + "".join(f"<li>{e(x)}</li>" for x in t.get("tips", [])) + "</ul>" if t.get("tips") else ""
     stays = "".join(stay_card(s) for s in t.get("stay", []))
     stay_pr = '<span class="kt-pr">PR</span>' if any(s.get("rakuten", "").startswith(AFFILIATE) for s in t.get("stay", [])) else ""
-    sake_links = [f'<a href="{IKKON}index.html#{e(s["id"])}">{e(s["name"])}を一献で見る</a>' for s in t.get("ikkon", [])]
-    sake_links.append(f'<a href="{IKKON}kura.html#{e(k["id"])}">{e(k["name"])}の紹介(一献)</a>')
+    sake_note = f'<p class="kt-body">旅のおともに:{"、".join(e(s) for s in t["sakes"])}</p>' if t.get("sakes") else ""
+    sake_links = [f'<a href="kura.html#{e(k["id"])}">宮城の蔵の一覧で見る</a>']
     if k.get("url"):
         sake_links.append(f'<a href="{e(k["url"])}" target="_blank" rel="noopener">蔵の公式サイト</a>')
     nexts = "".join(f'''<a class="kt-trip kt-trip-sm" href="{e(o["kura"])}.html">{cover(o, kura[o["kura"]], "sm")}<div class="kt-trip-body"><small>{e(kura[o["kura"]]["city"])} ・ {e(o["length"])}</small><h3>{e(o["title"])}</h3></div></a>'''
@@ -332,8 +331,10 @@ for t in trips:
   </section>""" if stays else ""}
 
   <section class="section">
-    <div class="wrap">
+    <div class="wrap stack">
       <div class="section-head"><h2>この蔵の酒</h2></div>
+      <div class="brands">{brands}</div>
+      {sake_note}
       <div class="links">{"".join(sake_links)}</div>
     </div>
   </section>
@@ -373,7 +374,7 @@ rest_html = []
 for a in AREAS:
     ks = [k for k in kura.values() if k["area"] == a and k["id"] not in seen]
     if ks:
-        items = "".join(f'<li><a href="{IKKON}kura.html#{e(k["id"])}">{e(k["name"])}</a><span class="kt-city">{e(k["city"])}・{TOUR[k["tour"]][0]}</span></li>' for k in ks)
+        items = "".join(f'<li><a href="kura.html#{e(k["id"])}">{e(k["name"])}</a><span class="kt-city">{e(k["city"])}・{TOUR[k["tour"]][0]}</span></li>' for k in ks)
         rest_html.append(f'      <div class="kt-area-name">{e(a)}</div>\n      <ul class="kt-rest">{items}</ul>')
 
 body = f'''  <section class="hero-c kt-hero">
@@ -423,11 +424,76 @@ body = f'''  <section class="hero-c kt-hero">
     <div class="wrap">
       <div class="section-head"><h2>これから訪ねる蔵</h2><p>旅のしおりは順に増やしていきます</p></div>
 {chr(10).join(rest_html)}
-      <p class="notice">蔵の名前を押すと、一献の「宮城の蔵」で紹介を読めます。</p>
+      <p class="notice">蔵の名前を押すと、「宮城の蔵」で蔵の紹介と見学の受け入れを読めます。</p>
     </div>
   </section>'''
 tail = f'<script src="assets/filter.js?v={VERSION}"></script>\n'
-ld = {"@context": "https://schema.org", "@type": "WebSite", "name": "蔵旅 by 一献", "url": SITE}
+ld = {"@context": "https://schema.org", "@type": "WebSite", "name": "蔵旅", "url": SITE}
 head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
-(ROOT / "index.html").write_text(shell("蔵旅 by 一献|酒蔵をたずねる旅のしおり", f"宮城の酒蔵をたずね、蔵のまわりの見どころと一日の旅程を紹介する旅のしおり。いまは{len(trips)}編。", body, "", home=True, extra_head=head, tail=tail), encoding="utf-8")
+(ROOT / "index.html").write_text(shell("蔵旅|酒蔵をたずねる旅のしおり", f"宮城の酒蔵をたずね、蔵のまわりの見どころと一日の旅程を紹介する旅のしおり。いまは{len(trips)}編。", body, "", current="index", extra_head=head, tail=tail), encoding="utf-8")
+
+# ---------- 宮城の蔵(蔵の一覧) ----------
+trip_of = {t["kura"]: t for t in trips}
+
+
+def kura_card(k):
+    label, cls = TOUR[k["tour"]]
+    links = []
+    if k["id"] in trip_of:
+        links.append(f'<a href="{e(k["id"])}.html">旅のしおりを見る</a>')
+    if k.get("url"):
+        links.append(f'<a href="{e(k["url"])}" target="_blank" rel="noopener">公式サイト</a>')
+    links.append(f'<a href="https://miyagisake.jp/kuramoto/{e(k["id"])}/" target="_blank" rel="noopener">宮城県酒造組合の紹介</a>')
+    trip = f'<p class="kt-kura-trip">旅のしおり:<a href="{e(k["id"])}.html">{e(trip_of[k["id"]]["title"])}</a></p>' if k["id"] in trip_of else ""
+    return f'''        <article class="place kura" id="{e(k["id"])}" data-tour="{e(k["tour"])}">
+          <div class="place-head"><h3>{e(k["name"])}</h3><span class="area">{e(k["city"])}</span></div>
+          <div class="brands">{"".join(f"<span>{e(b)}</span>" for b in k["brands"])}</div>
+          <p>{e(k["intro"])}</p>
+          <dl class="info"><dt>創業</dt><dd>{e(k["founded"])}</dd><dt>見学</dt><dd><span class="tour {cls}">{label}</span> {e(k["tourNote"])}</dd></dl>
+          {trip}
+          <div class="links">{"".join(links)}</div>
+        </article>'''
+
+
+kura_secs = []
+for i, a in enumerate(AREAS, start=1):
+    ks = [k for k in kura.values() if k["area"] == a]
+    kura_secs.append(f'''  <section class="section area-sec" id="area{i}">
+    <div class="wrap">
+      <div class="section-head"><h2>{e(a)}</h2><p>{len(ks)}蔵</p></div>
+      <div class="places">
+{chr(10).join(kura_card(k) for k in ks)}
+      </div>
+    </div>
+  </section>''')
+jump = "".join(f'<a href="#area{i}">{e(a)}</a>' for i, a in enumerate(AREAS, start=1))
+n_yes = sum(1 for k in kura.values() if k["tour"] == "yes")
+body = f'''  <section class="section">
+    <div class="wrap stack">
+      <div class="section-head"><h1>宮城の蔵</h1><p>{len(kura)}蔵 ・ 旅のしおりは{len(trips)}編</p></div>
+      <p class="kt-body">宮城県酒造組合に加盟する{len(kura)}の蔵を、地域ごとに並べました。訪ねる蔵を選ぶときに、見学の受け入れとあわせて見てください。</p>
+      <nav class="jump" aria-label="地域">{jump}</nav>
+      <div class="chips"><button type="button" class="chip" id="only-tour" aria-pressed="false">見学できる蔵だけ表示({n_yes}蔵)</button></div>
+      <p class="notice">見学の受け入れや時期は変わることがあります。訪問前に必ず各蔵へ問い合わせてください。蔵の情報は<a href="https://miyagisake.jp/kuramoto/" target="_blank" rel="noopener">宮城県酒造組合</a>の蔵元紹介をもとにしています。</p>
+    </div>
+  </section>
+
+{chr(10).join(kura_secs)}'''
+tail = '''<script>
+(function () {
+  var b = document.getElementById('only-tour');
+  b.addEventListener('click', function () {
+    var on = b.getAttribute('aria-pressed') !== 'true';
+    b.setAttribute('aria-pressed', String(on));
+    Array.prototype.forEach.call(document.querySelectorAll('.kura'), function (c) {
+      c.hidden = on && c.getAttribute('data-tour') !== 'yes';
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.area-sec'), function (s) {
+      s.hidden = !s.querySelector('.kura:not([hidden])');
+    });
+  });
+})();
+</script>
+'''
+(ROOT / "kura.html").write_text(shell("宮城の蔵|蔵旅", f"宮城県の酒蔵{len(kura)}蔵の紹介と見学の受け入れ。旅のしおりのある蔵は、そのまま旅程へ。", body, "kura.html", current="kura", tail=tail), encoding="utf-8")
 print("蔵旅", len(trips), "編")
