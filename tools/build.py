@@ -23,7 +23,9 @@ from urllib.parse import quote
 VERSION = "5"
 SITE = "https://rehab-info.github.io/kuratabi/"  # 蔵旅の住所(独自ドメインに移したらここを直す)
 LEAFLET = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/"
+RAKUTEN_ON = False  # 楽天アフィリエイト(宿の予約リンク・宿のカード・広告の表示)を使うときは True にする。いまは止めている
 RAKUTEN_AFF = "58c36830.1e80c147.58c36831.fb6bd4b1"  # 楽天アフィリエイトID
+AD_NOTICE = "    <span>当サイトは楽天アフィリエイトなどの広告を利用しています。予約のリンクから得た収益は、サイトの運営に使います。</span>\n" if RAKUTEN_ON else ""
 
 ROOT = Path(__file__).resolve().parent.parent
 data = json.loads((ROOT / "data/kuratabi.json").read_text(encoding="utf-8"))
@@ -127,8 +129,7 @@ def shell(title, desc, body, path, current="", extra_head="", tail=""):
   <div class="wrap">
     <span>見学の受け入れや店の営業は変わることがあります。出かける前に必ず各蔵・各施設へ確かめてください。情報は{e(data["checked"])}に確認しました。</span>
     <span>試飲をする日は、電車やバス、運転しない人と。お酒は20歳になってから。飲酒運転は法律で禁止されています。</span>
-    <span>当サイトは楽天アフィリエイトなどの広告を利用しています。予約のリンクから得た収益は、サイトの運営に使います。</span>
-    <span>蔵旅は、日本酒案内「一献」がつくる酒蔵の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
+{AD_NOTICE}    <span>蔵旅は、日本酒案内「一献」がつくる酒蔵の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
   </div>
 </footer>
 {tail}</body>
@@ -275,7 +276,14 @@ for t in trips:
 
     course = "\n".join(f'          <li><time>{e(c["time"])}</time><span class="dot" aria-hidden="true"></span><span>{e(c["text"])}</span></li>' for c in t["course"])
     tips = '<ul class="kt-tips">' + "".join(f"<li>{e(x)}</li>" for x in t.get("tips", [])) + "</ul>" if t.get("tips") else ""
-    stays = "".join(f'''<div class="kt-stay"><h3>{e(s["name"])}</h3><p>{e(s["note"])}</p>{hotel_cards(fetch_hotels(s.get("travel") or s["name"]))}<div class="kt-stay-links"><a class="kt-stay-btn" href="{e(travel_link(s.get("travel") or s["name"]))}" target="_blank" rel="sponsored noopener">楽天トラベルで宿を探す</a><a href="{e(map_link(s.get("map") or s["name"]))}" target="_blank" rel="noopener">地図で見る</a></div></div>''' for s in t.get("stay", []))
+    def stay_html(s):
+        maplink = f'<a href="{e(map_link(s.get("map") or s["name"]))}" target="_blank" rel="noopener">地図で見る</a>'
+        if not RAKUTEN_ON:
+            return f'<div class="kt-stay"><h3>{e(s["name"])}</h3><p>{e(s["note"])}</p><div class="kt-stay-links">{maplink}</div></div>'
+        kw = s.get("travel") or s["name"]
+        return (f'<div class="kt-stay"><h3>{e(s["name"])}</h3><p>{e(s["note"])}</p>{hotel_cards(fetch_hotels(kw))}'
+                f'<div class="kt-stay-links"><a class="kt-stay-btn" href="{e(travel_link(kw))}" target="_blank" rel="sponsored noopener">楽天トラベルで宿を探す</a>{maplink}</div></div>')
+    stays = "".join(stay_html(s) for s in t.get("stay", []))
     sake_note = f'<p class="kt-body">旅のおともに:{"、".join(e(s) for s in t["sakes"])}</p>' if t.get("sakes") else ""
     sake_links = [f'<a href="kura.html#{e(k["id"])}">宮城の蔵の一覧で見る</a>']
     if k.get("url"):
@@ -387,7 +395,7 @@ for t in trips:
   {f"""<section class="section">
     <div class="wrap">
       <div class="section-head"><h2>泊まるなら</h2><p>旅を一泊にのばすなら</p></div>
-      <p class="kt-pr">このコーナーのリンクは広告(楽天アフィリエイト)です。</p>
+      {'<p class="kt-pr">このコーナーのリンクは広告(楽天アフィリエイト)です。</p>' if RAKUTEN_ON else ''}
       <div class="kt-stays">{stays}</div>
     </div>
   </section>""" if stays else ""}
@@ -493,7 +501,8 @@ tail = f'<script src="assets/filter.js?v={VERSION}"></script>\n'
 ld = {"@context": "https://schema.org", "@type": "WebSite", "name": "蔵旅 by 一献", "url": SITE}
 head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
 (ROOT / "index.html").write_text(shell("蔵旅 by 一献|酒蔵をたずねる旅のしおり", f"宮城の酒蔵をたずね、蔵のまわりの見どころと一日の旅程を紹介する旅のしおり。いまは{len(trips)}編。", body, "", current="index", extra_head=head, tail=tail), encoding="utf-8")
-(ROOT / "rakuten-status.json").write_text(json.dumps(rk_status, ensure_ascii=False, indent=1), encoding="utf-8")
+if RAKUTEN_ON:
+    (ROOT / "rakuten-status.json").write_text(json.dumps(rk_status, ensure_ascii=False, indent=1), encoding="utf-8")
 
 # ---------- 宮城の蔵(蔵の一覧) ----------
 trip_of = {t["kura"]: t for t in trips}
@@ -560,4 +569,4 @@ tail = '''<script>
 '''
 (ROOT / "kura.html").write_text(shell("宮城の蔵|蔵旅 by 一献", f"宮城県の酒蔵{len(kura)}蔵の紹介と見学の受け入れ。旅のしおりのある蔵は、そのまま旅程へ。", body, "kura.html", current="kura", tail=tail), encoding="utf-8")
 print("蔵旅", len(trips), "編")
-print("楽天トラベル: 取得", len(rk_status["ok"]), "/ 空", len(rk_status["empty"]), "/ エラー", len(rk_status["errors"]))
+print("楽天トラベル:", "取得 " + str(len(rk_status["ok"])) + " / 空 " + str(len(rk_status["empty"])) + " / エラー " + str(len(rk_status["errors"])) if RAKUTEN_ON else "止めています")

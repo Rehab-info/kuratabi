@@ -4,8 +4,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  schedule:
-    - cron: "23 21 * * 0"  # 毎週月曜 6:23(日本時間)に楽天の宿の情報を取り直す
 
 permissions:
   contents: read
