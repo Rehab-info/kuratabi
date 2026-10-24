@@ -1,0 +1,416 @@
+[
+ {
+  "id": "isawake",
+  "name": "仙台伊澤家 勝山酒造",
+  "area": "仙台・県央",
+  "city": "仙台市泉区",
+  "founded": "元禄年間(1688年ごろ)",
+  "brands": [
+   "勝山",
+   "戦勝政宗"
+  ],
+  "intro": "仙台藩の御酒御用蔵の流れをくむ蔵で、県内で初めての純米蔵になりました。透明感のある旨みと、料理に寄り添う味わいを目指しています。純米吟醸「献」は2019年にIWCの日本酒部門で最高賞を受けました。",
+  "tour": "no",
+  "tourNote": "見学不可",
+  "url": "https://www.katsu-yama.com/",
+  "sakes": [
+   "katsuyamaken"
+  ]
+ },
+ {
+  "id": "uchigasakii",
+  "name": "内ヶ崎酒造店",
+  "area": "仙台・県央",
+  "city": "富谷市",
+  "founded": "1661年",
+  "brands": [
+   "鳳陽"
+  ],
+  "intro": "360年以上続く県内最古の酒蔵です。宮城の酒米「吟のいろは」「蔵の華」を使った酒で受賞を重ね、ふだんの食事に合う、ほっとできる酒を目指しています。",
+  "tour": "yes",
+  "tourNote": "夏期に見学可(要予約)",
+  "url": "https://uchigasaki.com/",
+  "sakes": []
+ },
+ {
+  "id": "taiwagura",
+  "name": "大和蔵酒造",
+  "area": "仙台・県央",
+  "city": "黒川郡大和町",
+  "founded": "1798年(山形県で創業、1996年に移転)",
+  "brands": [
+   "雪の松島",
+   "大和蔵"
+  ],
+  "intro": "山形県高畠町で創業した蔵が、1996年に大和町へ移りました。吟醸用の麹は手作業で造り、日本酒度+20の「雪の松島 超辛」が人気です。",
+  "tour": "ask",
+  "tourNote": "見学は要問い合わせ(繁忙期は不可)",
+  "url": "https://taiwagura.co.jp/",
+  "sakes": [
+   "yukinomatsushima"
+  ]
+ },
+ {
+  "id": "sasaki",
+  "name": "佐々木酒造店",
+  "area": "県南",
+  "city": "名取市閖上",
+  "founded": "1871年",
+  "brands": [
+   "宝船浪の音"
+  ],
+  "intro": "東日本大震災の津波で蔵が流されましたが、仮設の蔵で酒造りを続け、2019年に創業の地・閖上で蔵を再建しました。「宮城、閖上に寄り添う酒造り」を掲げています。",
+  "tour": "yes",
+  "tourNote": "見学可(要予約)",
+  "url": "https://housen-naminooto.com/",
+  "sakes": [
+   "housen"
+  ]
+ },
+ {
+  "id": "onuma",
+  "name": "大沼酒造店",
+  "area": "県南",
+  "city": "柴田郡村田町",
+  "founded": "1712年",
+  "brands": [
+   "乾坤一"
+  ],
+  "intro": "紅花商で栄えた蔵の町・村田の蔵です。宮城の米ササニシキにこだわり、やさしい旨みとキレのよさが持ち味。12月には新米で仕込む「うすにごり」も出ます。",
+  "tour": "no",
+  "tourNote": "見学不可",
+  "url": "https://kenkonichi.com/",
+  "sakes": [
+   "kenkonichi"
+  ]
+ },
+ {
+  "id": "zao",
+  "name": "蔵王酒造",
+  "area": "県南",
+  "city": "白石市",
+  "founded": "1873年",
+  "brands": [
+   "蔵王",
+   "蔵王昇り龍"
+  ],
+  "intro": "白石市で唯一の酒蔵です。敷地の地下50mから汲み上げる伏流水で、旨口でキレのよい酒を造ります。若い蔵人を中心に、生酛造りなど新しい挑戦も続けています。",
+  "tour": "yes",
+  "tourNote": "見学可(事前に相談)",
+  "url": "http://www.zaoshuzo.com/",
+  "sakes": [
+   "zao"
+  ]
+ },
+ {
+  "id": "saura",
+  "name": "佐浦",
+  "area": "塩竈",
+  "city": "塩竈市",
+  "founded": "1724年",
+  "brands": [
+   "浦霞"
+  ],
+  "intro": "鹽竈神社の門前町に江戸末期から明治初期の蔵が残ります。戦後に登場した淡麗辛口の「浦霞 禅」は、吟醸酒・地酒ブームの先駆けとなりました。",
+  "tour": "partial",
+  "tourNote": "外観の蔵ガイドのみ(要問い合わせ)・直営店「浦霞 酒ギャラリー」あり",
+  "url": "https://www.urakasumi.com/",
+  "sakes": [
+   "urakasumi"
+  ]
+ },
+ {
+  "id": "abekan",
+  "name": "阿部勘酒造",
+  "area": "塩竈",
+  "city": "塩竈市",
+  "founded": "1716年",
+  "brands": [
+   "阿部勘",
+   "於茂多加男山",
+   "四季の松島"
+  ],
+  "intro": "鹽竈神社の御神酒御用蔵として始まった、300年を超える蔵です。塩竈の海の幸を引き立てる食中酒を中心に、香り高い酒や低アルコール酒にも挑んでいます。",
+  "tour": "no",
+  "tourNote": "見学不可",
+  "url": "http://www.abekan.com/",
+  "sakes": []
+ },
+ {
+  "id": "ichinokura",
+  "name": "一ノ蔵",
+  "area": "大崎・加美・遠田",
+  "city": "大崎市松山",
+  "founded": "1973年(4蔵が合同)",
+  "brands": [
+   "一ノ蔵",
+   "すず音"
+  ],
+  "intro": "県内4つの蔵が合同して生まれた県内随一の大手蔵ですが、甑や麹蓋を使う手づくりを大切にしています。「無鑑査本醸造」や発泡清酒「すず音」で知られます。",
+  "tour": "yes",
+  "tourNote": "本社蔵の見学可(平日・要予約)",
+  "url": "https://ichinokura.co.jp/",
+  "sakes": [
+   "ichinokura"
+  ]
+ },
+ {
+  "id": "niisawa",
+  "name": "新澤醸造店",
+  "area": "大崎・加美・遠田",
+  "city": "大崎市三本木",
+  "founded": "1873年",
+  "brands": [
+   "伯楽星",
+   "愛宕の松"
+  ],
+  "intro": "震災で蔵が全壊しましたが、同年に川崎町で酒造りを再開しました。年齢や経歴にとらわれない体制で知られ、世界酒蔵ランキングで2022・2023年に1位となりました。",
+  "tour": "no",
+  "tourNote": "見学不可",
+  "url": "https://www.niizawa-brewery.co.jp/",
+  "sakes": [
+   "hakurakusei"
+  ]
+ },
+ {
+  "id": "moritami",
+  "name": "森民酒造店",
+  "area": "大崎・加美・遠田",
+  "city": "大崎市岩出山",
+  "founded": "1883年",
+  "brands": [
+   "森泉"
+  ],
+  "intro": "岩出山の小さな蔵です。蔵の井戸の超軟水で「濃醇甘口」の酒を目指し、1974年から長期熟成酒にも取り組んでいます。",
+  "tour": "no",
+  "tourNote": "蔵見学は不可(「昭和レトロ館」は土日に見学可)",
+  "url": null,
+  "sakes": []
+ },
+ {
+  "id": "kanbai",
+  "name": "寒梅酒造",
+  "area": "大崎・加美・遠田",
+  "city": "大崎市古川",
+  "founded": "1918年",
+  "brands": [
+   "宮寒梅",
+   "鶯咲"
+  ],
+  "intro": "県内で唯一、酒米の栽培から醸造までを自社で行う「栽培醸造蔵」です。華やかな香りと米の旨みを引き出した「一杯で旨い酒」を目指しています。",
+  "tour": "yes",
+  "tourNote": "見学可(公式サイトから申込)・直営ショップとバーあり",
+  "url": "http://miyakanbai.com/",
+  "sakes": [
+   "miyakanbai"
+  ]
+ },
+ {
+  "id": "tanaka",
+  "name": "田中酒造店",
+  "area": "大崎・加美・遠田",
+  "city": "加美郡加美町",
+  "founded": "1789年",
+  "brands": [
+   "真鶴",
+   "田林"
+  ],
+  "intro": "山廃や生酛など伝統的な造りを守る蔵で、2010年には県内で67年ぶりに生酛造りを復活させました。生酛の酒はぬる燗で味わいが開くとされます。",
+  "tour": "no",
+  "tourNote": "見学不可(2月11日に蔵開き)",
+  "url": "http://www.manatsuru.co.jp/",
+  "sakes": [
+   "manatsuru"
+  ]
+ },
+ {
+  "id": "yamawa",
+  "name": "山和酒造店",
+  "area": "大崎・加美・遠田",
+  "city": "加美郡加美町",
+  "founded": "1896年",
+  "brands": [
+   "わしが國",
+   "山和"
+  ],
+  "intro": "3つの蔵がある酒どころ・加美町の蔵です。地元で親しまれる「わしが國」に加え、基本を大切にした限定流通の「山和」を立ち上げました。",
+  "tour": "no",
+  "tourNote": "見学不可",
+  "url": "https://www.yamawa-syuzouten.co.jp/",
+  "sakes": []
+ },
+ {
+  "id": "nakayu",
+  "name": "中勇酒造店",
+  "area": "大崎・加美・遠田",
+  "city": "加美郡加美町",
+  "founded": "1906年",
+  "brands": [
+   "天上夢幻"
+  ],
+  "intro": "1980年代に、まだ珍しかった吟醸酒を商品化した蔵です。地元の米を使った手づくり・少量仕込みを守り、海外にも輸出しています。",
+  "tour": "yes",
+  "tourNote": "見学可(要予約)",
+  "url": "http://tenjo-mugen.co.jp/",
+  "sakes": [
+   "tenjomugen"
+  ]
+ },
+ {
+  "id": "kawakei",
+  "name": "川敬商店",
+  "area": "大崎・加美・遠田",
+  "city": "遠田郡美里町",
+  "founded": "1902年",
+  "brands": [
+   "黄金澤",
+   "橘屋"
+  ],
+  "intro": "生酛系の山廃仕込みを守りながら、軽やかできれいな味わいを目指しています。地元の農業高校の記念酒を醸すなど、地域との連携を大切にしています。",
+  "tour": "yes",
+  "tourNote": "見学可(4〜9月・要予約)",
+  "url": "https://www.koganesawa.com/",
+  "sakes": [
+   "koganesawa"
+  ]
+ },
+ {
+  "id": "chida",
+  "name": "千田酒造",
+  "area": "栗原・登米",
+  "city": "栗原市栗駒",
+  "founded": "1920年",
+  "brands": [
+   "栗駒山",
+   "奥鶴"
+  ],
+  "intro": "栗駒山の伏流水で、やわらかくクリアでキレのある酒を造ります。もろみの温度を細かく記録し、毎年の酒質を安定させています。",
+  "tour": "no",
+  "tourNote": "見学不可",
+  "url": "https://chidashuzo.co.jp/",
+  "sakes": [
+   "kurikoma"
+  ]
+ },
+ {
+  "id": "kanenoi",
+  "name": "金の井酒造",
+  "area": "栗原・登米",
+  "city": "栗原市一迫",
+  "founded": "1915年",
+  "brands": [
+   "綿屋"
+  ],
+  "intro": "1996年に「綿屋」を立ち上げ、出汁の料理に合う、米の甘みのあるすっきりした酒を目指しています。地元の米農家との関係づくりも大切にしています。",
+  "tour": "no",
+  "tourNote": "見学不可",
+  "url": "https://www.kanenoi.co.jp/",
+  "sakes": [
+   "wataya"
+  ]
+ },
+ {
+  "id": "hagino",
+  "name": "萩野酒造",
+  "area": "栗原・登米",
+  "city": "栗原市金成",
+  "founded": "1840年",
+  "brands": [
+   "萩の鶴",
+   "日輪田"
+  ],
+  "intro": "旧有壁本陣の向かいに建つ蔵です。穏やかな香りですっきりした「萩の鶴」と、2021年から生酛仕込みにした旨みの強い「日輪田」を造っています。",
+  "tour": "ask",
+  "tourNote": "見学は要相談",
+  "url": "http://www.hagino-shuzou.co.jp/",
+  "sakes": []
+ },
+ {
+  "id": "ishikoshi",
+  "name": "石越醸造",
+  "area": "栗原・登米",
+  "city": "登米市石越",
+  "founded": "1920年",
+  "brands": [
+   "澤乃泉"
+  ],
+  "intro": "登米市で唯一の酒蔵です。地元の契約農家と酒米を育て、環境保全米も使っています。出荷の8割は県内向けです。",
+  "tour": "yes",
+  "tourNote": "見学可(要予約)",
+  "url": "http://sawanoizumi.jp/",
+  "sakes": [
+   "sawanoizumi"
+  ]
+ },
+ {
+  "id": "hirakou",
+  "name": "平孝酒造",
+  "area": "石巻・気仙沼",
+  "city": "石巻市",
+  "founded": "1861年",
+  "brands": [
+   "日高見"
+  ],
+  "intro": "港町・石巻の蔵で、やわらかく透明感があり、キレのよい酒は魚介との相性に定評があります。震災後は地元の寿司店とも手を組み、復興に取り組んできました。",
+  "tour": "no",
+  "tourNote": "見学不可",
+  "url": "https://www.hirakoushuzou.jp/",
+  "sakes": [
+   "hitakami"
+  ]
+ },
+ {
+  "id": "suminoe",
+  "name": "墨廼江酒造",
+  "area": "石巻・気仙沼",
+  "city": "石巻市",
+  "founded": "1845年",
+  "brands": [
+   "墨廼江",
+   "谷風",
+   "弁慶岬"
+  ],
+  "intro": "宮城酵母だけを使い、酒米の違いで味わいの幅を出す蔵です。震災で浸水しましたが、同じ年の秋に酒造りを再開しました。",
+  "tour": "no",
+  "tourNote": "見学不可",
+  "url": null,
+  "sakes": [
+   "suminoe"
+  ]
+ },
+ {
+  "id": "kakuboshi",
+  "name": "角星",
+  "area": "石巻・気仙沼",
+  "city": "気仙沼市",
+  "founded": "1906年",
+  "brands": [
+   "金紋両國",
+   "水鳥記"
+  ],
+  "intro": "香りや味わいを控えめにした、新鮮な魚介に合わせやすい酒を造る気仙沼の老舗です。2021年に旧白山小学校の跡地へ製造場を移しました。",
+  "tour": "yes",
+  "tourNote": "見学可(1〜3月の平日・要予約)",
+  "url": "https://kakuboshi.mystrikingly.com/",
+  "sakes": []
+ },
+ {
+  "id": "otokoyama",
+  "name": "男山本店",
+  "area": "石巻・気仙沼",
+  "city": "気仙沼市",
+  "founded": "1912年",
+  "brands": [
+   "蒼天伝",
+   "気仙沼男山",
+   "美禄"
+  ],
+  "intro": "2002年に気仙沼の澄んだ空にちなむ「蒼天伝」を立ち上げました。宮城初の酒米「蔵の華」を大切にし、2022年からは女性杜氏が酒造りを担っています。",
+  "tour": "yes",
+  "tourNote": "見学可(要予約・有料)",
+  "url": "https://www.kesennuma.co.jp/",
+  "sakes": [
+   "soutenden"
+  ]
+ }
+]
