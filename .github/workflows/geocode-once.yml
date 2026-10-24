@@ -1,0 +1,14 @@
+name: Geocode once
+on: workflow_dispatch
+permissions:
+  contents: write
+jobs:
+  geo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/geocode_once.py > geo-raw.json
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add geo-raw.json && git commit -m "座標調べの結果(一時ファイル)" && git push
