@@ -20,7 +20,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
-VERSION = "5"
+VERSION = "6"
 SITE = "https://rehab-info.github.io/kuratabi/"  # 蔵旅の住所(独自ドメインに移したらここを直す)
 LEAFLET = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/"
 RAKUTEN_ON = False  # 楽天アフィリエイト(宿の予約リンク・宿のカード・広告の表示)を使うときは True にする。いまは止めている
@@ -417,7 +417,7 @@ for t in trips:
   </section>'''
     desc = f'{k["name"]}({k["city"]})をたずねる旅。{t["lead"]}'[:120]
     page = f'{k["id"]}.html'
-    (ROOT / page).write_text(shell(f'{t["title"]}|{k["name"]}をたずねる蔵旅', desc, body, page, extra_head=head, tail=tail), encoding="utf-8")
+    (ROOT / page).write_text(shell(f'{t["title"]}|{k["name"]}をたずねる 蔵旅 by 一献', desc, body, page, extra_head=head, tail=tail), encoding="utf-8")
 
 # ---------- 入口のページ ----------
 cards = "\n".join(f'''        <a class="kt-trip" href="{e(t["kura"])}.html" data-tags="{e("|".join(t.get("tags", [])))}" data-length="{e(t["lengthKey"])}">
