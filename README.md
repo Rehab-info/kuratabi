@@ -1,15 +1,16 @@
 # 蔵旅 by 一献
 
-酒蔵をたずね、蔵のまわりの見どころと一日の旅程を紹介する「旅のしおり」のサイトです。日本酒案内「一献」の姉妹サイトで、デザインの土台は一献と共通です。
+酒蔵をたずね、蔵のまわりの見どころと一日の旅程を紹介する「旅のしおり」のサイトです。日本酒案内「一献」がつくっていますが、蔵の紹介も旅程もこのサイトの中で完結させ、一献のページへはリンクしません。
 
 ## ファイル構成
 
 ```
 index.html          入口(tools/build.py が自動で作る)
 <蔵のID>.html        蔵ごとの旅のしおり(自動で作る)
+kura.html           宮城の蔵の一覧(data/kura.json から自動で作る)
 data/kuratabi.json  旅のしおりのデータ(ここを編集して旅を追加)
-data/kura.json      宮城の蔵のデータ(一献の data/kura.json を写したもの)
-assets/style.css    デザイン(一献の style.css に蔵旅の部品を足したもの)
+data/kura.json      宮城の蔵のデータ(名前・地域・見学の可否・紹介文など)
+assets/style.css    デザイン
 tools/build.py      ページを作り直すスクリプト
 assets/map.js       しおりの地図(Leaflet と OpenStreetMap)
 assets/filter.js    入口の絞り込み
@@ -32,7 +33,7 @@ images/             写真(撮影したもの・許可を得たもの)
 {
   "kura": "otokoyama",          // data/kura.json の蔵 ID
   "with": [],                   // 同じ町にあるほかの蔵の ID(任意)
-  "ikkon": [{"id": "soutenden", "name": "蒼天伝 …"}],  // 一献で紹介している銘柄(任意)
+  "sakes": ["蒼天伝 …"],        // 「この蔵の酒」で旅のおともに挙げる酒(任意)
   "title": "旅の名前(◯◯と、◯◯)",   // 「、」のところで改行して表示します
   "lead": "2〜3文の紹介",
   "access": "行き方",
@@ -61,7 +62,7 @@ images/             写真(撮影したもの・許可を得たもの)
 
 ## 蔵の情報を更新する
 
-見学の可否などは一献の `data/kura.json` が元です。一献側を直したら、このリポジトリの `data/kura.json` にも写してください。
+見学の可否や紹介文は `data/kura.json` を直して `python3 tools/build.py` を実行します。宮城の蔵の一覧(`kura.html`)と、各しおりの「蔵のこと」に反映されます。
 
 ## 手元で確認する
 
