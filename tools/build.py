@@ -1,4 +1,5 @@
-"""data/kuratabi.json と data/kura.json から「蔵旅」のページを作るスクリプト。
+"""data/kuratabi.json と data/kura.json から「蔵旅 by 一献」のページを作るスクリプト。
+蔵の紹介も旅程もこのサイトの中で完結させ、一献のページへは飛ばしません。
 使い方: python3 tools/build.py
 
 旅のしおりを足すときは data/kuratabi.json の trips に1件追加して、このスクリプトを実行してください。
@@ -106,7 +107,7 @@ def shell(title, desc, body, path, current="", extra_head="", tail=""):
 <meta property="og:title" content="{e(title)}">
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{SITE}{path}">
-<meta property="og:site_name" content="蔵旅">
+<meta property="og:site_name" content="蔵旅 by 一献">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
@@ -115,7 +116,7 @@ def shell(title, desc, body, path, current="", extra_head="", tail=""):
 <body>
 <header class="site-head">
   <div class="wrap">
-    <a class="logo" href="index.html"><span class="mark" aria-hidden="true"></span><b>蔵旅</b><small>酒蔵をたずねる旅</small></a>
+    <a class="logo" href="index.html"><span class="mark" aria-hidden="true"></span><b>蔵旅</b><small>by 一献</small></a>
     <nav class="nav"><a href="index.html"{cur if current == "index" else ""}>旅のしおり</a><a href="kura.html"{cur if current == "kura" else ""}>宮城の蔵</a></nav>
   </div>
 </header>
@@ -128,7 +129,7 @@ def shell(title, desc, body, path, current="", extra_head="", tail=""):
   <div class="wrap">
     <span>見学の受け入れや店の営業は変わることがあります。出かける前に必ず各蔵・各施設へ確かめてください。情報は{e(data["checked"])}に確認しました。</span>
     <span>試飲をする日は、電車やバス、運転しない人と。お酒は20歳になってから。飲酒運転は法律で禁止されています。</span>
-{AFFILIATE_NOTE if has_affiliate else ""}    <span>地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
+{AFFILIATE_NOTE if has_affiliate else ""}    <span>蔵旅は、日本酒案内「一献」がつくる酒蔵の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
   </div>
 </footer>
 {tail}</body>
@@ -428,9 +429,9 @@ body = f'''  <section class="hero-c kt-hero">
     </div>
   </section>'''
 tail = f'<script src="assets/filter.js?v={VERSION}"></script>\n'
-ld = {"@context": "https://schema.org", "@type": "WebSite", "name": "蔵旅", "url": SITE}
+ld = {"@context": "https://schema.org", "@type": "WebSite", "name": "蔵旅 by 一献", "url": SITE}
 head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
-(ROOT / "index.html").write_text(shell("蔵旅|酒蔵をたずねる旅のしおり", f"宮城の酒蔵をたずね、蔵のまわりの見どころと一日の旅程を紹介する旅のしおり。いまは{len(trips)}編。", body, "", current="index", extra_head=head, tail=tail), encoding="utf-8")
+(ROOT / "index.html").write_text(shell("蔵旅 by 一献|酒蔵をたずねる旅のしおり", f"宮城の酒蔵をたずね、蔵のまわりの見どころと一日の旅程を紹介する旅のしおり。いまは{len(trips)}編。", body, "", current="index", extra_head=head, tail=tail), encoding="utf-8")
 
 # ---------- 宮城の蔵(蔵の一覧) ----------
 trip_of = {t["kura"]: t for t in trips}
@@ -495,5 +496,5 @@ tail = '''<script>
 })();
 </script>
 '''
-(ROOT / "kura.html").write_text(shell("宮城の蔵|蔵旅", f"宮城県の酒蔵{len(kura)}蔵の紹介と見学の受け入れ。旅のしおりのある蔵は、そのまま旅程へ。", body, "kura.html", current="kura", tail=tail), encoding="utf-8")
+(ROOT / "kura.html").write_text(shell("宮城の蔵|蔵旅 by 一献", f"宮城県の酒蔵{len(kura)}蔵の紹介と見学の受け入れ。旅のしおりのある蔵は、そのまま旅程へ。", body, "kura.html", current="kura", tail=tail), encoding="utf-8")
 print("蔵旅", len(trips), "編")
