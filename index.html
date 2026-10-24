@@ -3,13 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>蔵旅 by 一献</title>
+<title>蔵旅 by 一献|酒蔵をたずねる旅のしおり</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="宮城の酒蔵をたずね、蔵のまわりの見どころと一日の旅程を紹介する旅のしおり。いまは3編。">
+<link rel="canonical" href="https://rehab-info.github.io/kuratabi/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="蔵旅 by 一献|酒蔵をたずねる旅のしおり">
+<meta property="og:description" content="宮城の酒蔵をたずね、蔵のまわりの見どころと一日の旅程を紹介する旅のしおり。いまは3編。">
+<meta property="og:url" content="https://rehab-info.github.io/kuratabi/">
+<meta property="og:site_name" content="蔵旅 by 一献">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=1">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "蔵旅 by 一献", "url": "https://rehab-info.github.io/kuratabi/"}</script>
+<link rel="stylesheet" href="assets/style.css?v=2">
 </head>
 <body>
 <header class="site-head">
@@ -37,32 +44,58 @@
     <div class="hc-foot"><span class="hc-seal" aria-hidden="true">旅</span></div>
   </section>
 
-  <section class="section">
+  <section class="section" id="trips">
     <div class="wrap">
       <div class="section-head"><h2>旅のしおり</h2><p>蔵と、そのまわりの見どころと、一日の流れ</p></div>
-      <div class="kt-trips">
-        <a class="kt-trip" href="zao.html">
-          <small>白石市 ・ 半日〜1日</small>
-          <h3>蔵王の水と、白い城</h3>
-          <span class="kt-kura">蔵王酒造(蔵王・蔵王昇り龍)</span>
-          <p>蔵王連峰の玄関口、城下町・白石でただ一つの蔵です。駅から歩いて蔵の展示館へ、そのまま城と温麺へ。山の麓の水が育てた旨口の酒を、町ごと味わいます。</p>
-          <span class="series-more">旅のしおりを開く</span>
+      <div class="kt-filter" role="group" aria-label="旅のしおりを絞り込む">
+        <div class="chips"><button type="button" class="chip" data-tag="電車で行ける" aria-pressed="false">電車で行ける</button><button type="button" class="chip" data-tag="城下町" aria-pressed="false">城下町</button><button type="button" class="chip" data-tag="温泉" aria-pressed="false">温泉</button><button type="button" class="chip" data-tag="山" aria-pressed="false">山</button><button type="button" class="chip" data-tag="海の幸" aria-pressed="false">海の幸</button><button type="button" class="chip" data-tag="社寺" aria-pressed="false">社寺</button><button type="button" class="chip" data-tag="花見" aria-pressed="false">花見</button></div>
+        <div class="chips"><button type="button" class="chip" data-len="half" aria-pressed="false">半日</button><button type="button" class="chip" data-len="day" aria-pressed="false">1日</button></div>
+      </div>
+      <p class="kt-count" id="kt-count" aria-live="polite"></p>
+      <div class="kt-trips" id="kt-trips">
+        <a class="kt-trip" href="zao.html" data-tags="電車で行ける|城下町|温泉|山" data-length="half">
+          <div class="kt-cover kt-cover-md" aria-hidden="true"><span class="kt-cover-sugi"></span><span class="kt-cover-name"><span>蔵</span><span>王</span></span></div>
+          <div class="kt-trip-body">
+            <small>白石市 ・ 半日〜1日</small>
+            <h3>蔵王の水と、白い城</h3>
+            <span class="kt-kura">蔵王酒造(蔵王・蔵王昇り龍)</span>
+            <p>蔵王連峰の玄関口、城下町・白石でただ一つの蔵です。駅から歩いて蔵の展示館へ、そのまま城と温麺へ。山の麓の水が育てた旨口の酒を、町ごと味わいます。</p>
+            <div class="kt-tags"><span>電車で行ける</span><span>城下町</span><span>温泉</span><span>山</span></div>
+          </div>
         </a>
-        <a class="kt-trip" href="saura.html">
-          <small>塩竈市 ・ 半日</small>
-          <h3>門前の蔵と、港の朝</h3>
-          <span class="kt-kura">佐浦(浦霞)</span>
-          <p>鹽竈神社の門前町に、御神酒づくりから始まった浦霞と阿部勘の二つの蔵が残ります。朝は港で魚を、昼は神社の石段を、午後は蔵の店で酒を。歩いてめぐれる半日の旅です。</p>
-          <span class="series-more">旅のしおりを開く</span>
+        <a class="kt-trip" href="saura.html" data-tags="電車で行ける|海の幸|社寺" data-length="half">
+          <div class="kt-cover kt-cover-md" aria-hidden="true"><span class="kt-cover-sugi"></span><span class="kt-cover-name"><span>浦</span><span>霞</span></span></div>
+          <div class="kt-trip-body">
+            <small>塩竈市 ・ 半日</small>
+            <h3>門前の蔵と、港の朝</h3>
+            <span class="kt-kura">佐浦(浦霞)</span>
+            <p>鹽竈神社の門前町に、御神酒づくりから始まった浦霞と阿部勘の二つの蔵が残ります。朝は港で魚を、昼は神社の石段を、午後は蔵の店で酒を。歩いてめぐれる半日の旅です。</p>
+            <div class="kt-tags"><span>電車で行ける</span><span>海の幸</span><span>社寺</span></div>
+          </div>
         </a>
-        <a class="kt-trip" href="ichinokura.html">
-          <small>大崎市松山 ・ 1日(鳴子で1泊も)</small>
-          <h3>城下の蔵と、桜の丘</h3>
-          <span class="kt-kura">一ノ蔵(一ノ蔵・すず音)</span>
-          <p>四つの蔵が合わさって1973年に生まれた一ノ蔵は、甑や麹蓋を使う手づくりを守る蔵です。蔵のある旧松山町には城跡の公園と酒の資料館があり、足をのばせば鳴子の湯へ。</p>
-          <span class="series-more">旅のしおりを開く</span>
+        <a class="kt-trip" href="ichinokura.html" data-tags="電車で行ける|温泉|城下町|花見" data-length="day">
+          <div class="kt-cover kt-cover-md" aria-hidden="true"><span class="kt-cover-sugi"></span><span class="kt-cover-name"><span>一</span><span>ノ</span><span>蔵</span></span></div>
+          <div class="kt-trip-body">
+            <small>大崎市松山 ・ 1日(鳴子で1泊も)</small>
+            <h3>城下の蔵と、桜の丘</h3>
+            <span class="kt-kura">一ノ蔵(一ノ蔵・すず音)</span>
+            <p>四つの蔵が合わさって1973年に生まれた一ノ蔵は、甑や麹蓋を使う手づくりを守る蔵です。蔵のある旧松山町には城跡の公園と酒の資料館があり、足をのばせば鳴子の湯へ。</p>
+            <div class="kt-tags"><span>電車で行ける</span><span>温泉</span><span>城下町</span><span>花見</span></div>
+          </div>
         </a>
       </div>
+      <p class="kt-empty" id="kt-empty" hidden>この組み合わせの旅は、まだありません。条件を一つ外してみてください。</p>
+    </div>
+  </section>
+
+  <section class="section" id="calendar">
+    <div class="wrap">
+      <div class="section-head"><h2>酒蔵の一年</h2><p>いつ訪ねるかを決める目安に</p></div>
+      <div class="kt-cal">
+        <div class="kt-cal-row kt-cal-head"><div></div><div class="kt-cal-bar"><span class="kt-m">1</span><span class="kt-m">2</span><span class="kt-m">3</span><span class="kt-m">4</span><span class="kt-m">5</span><span class="kt-m">6</span><span class="kt-m">7</span><span class="kt-m">8</span><span class="kt-m">9</span><span class="kt-m">10</span><span class="kt-m">11</span><span class="kt-m">12</span></div></div>
+        <div class="kt-cal-row"><div class="kt-cal-name"><b>仕込み</b><small>蔵がいちばん忙しい季節。見学を休む蔵も</small></div><div class="kt-cal-bar"><span class="on"></span><span class="on"></span><span class="on"></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class="on"></span><span class="on"></span></div></div><div class="kt-cal-row"><div class="kt-cal-name"><b>新酒・しぼりたて</b><small>その冬に搾った酒が出回る</small></div><div class="kt-cal-bar"><span class="on"></span><span class="on"></span><span class="on"></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class="on"></span></div></div><div class="kt-cal-row"><div class="kt-cal-name"><b>蔵開き</b><small>春先に蔵を開く催しが多い</small></div><div class="kt-cal-bar"><span class=""></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span></div></div><div class="kt-cal-row"><div class="kt-cal-name"><b>夏酒</b><small>軽やかな夏向けの酒</small></div><div class="kt-cal-bar"><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class="on"></span><span class="on"></span><span class="on"></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span></div></div><div class="kt-cal-row"><div class="kt-cal-name"><b>ひやおろし</b><small>夏を越して熟した秋の酒</small></div><div class="kt-cal-bar"><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class=""></span><span class="on"></span><span class="on"></span><span class="on"></span><span class=""></span></div></div>
+      </div>
+      <p class="notice">時期は一般的な目安で、蔵によって前後します。仕込みの季節は見学を休む蔵もあるので、行く前に確かめてください。</p>
     </div>
   </section>
 
@@ -90,8 +123,9 @@
   <div class="wrap">
     <span>見学の受け入れや店の営業は変わることがあります。出かける前に必ず各蔵・各施設へ確かめてください。情報は2026年10月に確認しました。</span>
     <span>試飲をする日は、電車やバス、運転しない人と。お酒は20歳になってから。飲酒運転は法律で禁止されています。</span>
-    <span>蔵旅は、日本酒案内「<a href="https://rehab-info.github.io/ikkon/">一献</a>」の旅のしおりです。</span>
+    <span>蔵旅は、日本酒案内「<a href="https://rehab-info.github.io/ikkon/">一献</a>」の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
   </div>
 </footer>
+<script src="assets/filter.js?v=2"></script>
 </body>
 </html>

@@ -3,13 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>城下の蔵と、桜の丘 | 蔵旅 by 一献</title>
+<title>城下の蔵と、桜の丘|一ノ蔵をたずねる蔵旅</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="一ノ蔵(大崎市松山)をたずねる旅。四つの蔵が合わさって1973年に生まれた一ノ蔵は、甑や麹蓋を使う手づくりを守る蔵です。蔵のある旧松山町には城跡の公園と酒の資料館があり、足をのばせば鳴子の湯へ。">
+<link rel="canonical" href="https://rehab-info.github.io/kuratabi/ichinokura.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="城下の蔵と、桜の丘|一ノ蔵をたずねる蔵旅">
+<meta property="og:description" content="一ノ蔵(大崎市松山)をたずねる旅。四つの蔵が合わさって1973年に生まれた一ノ蔵は、甑や麹蓋を使う手づくりを守る蔵です。蔵のある旧松山町には城跡の公園と酒の資料館があり、足をのばせば鳴子の湯へ。">
+<meta property="og:url" content="https://rehab-info.github.io/kuratabi/ichinokura.html">
+<meta property="og:site_name" content="蔵旅 by 一献">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "TouristTrip", "name": "城下の蔵と、桜の丘", "description": "四つの蔵が合わさって1973年に生まれた一ノ蔵は、甑や麹蓋を使う手づくりを守る蔵です。蔵のある旧松山町には城跡の公園と酒の資料館があり、足をのばせば鳴子の湯へ。", "url": "https://rehab-info.github.io/kuratabi/ichinokura.html", "touristType": ["日本酒が好きな人", "酒蔵めぐり"], "itinerary": {"@type": "ItemList", "itemListElement": [{"@type": "ListItem", "position": 1, "item": {"@type": "TouristAttraction", "name": "松山酒ミュージアム", "description": "酒造りの道具や歴史を伝える資料館。一ノ蔵の催しの会場にもなります。", "geo": {"@type": "GeoCoordinates", "latitude": 38.51166, "longitude": 141.05205}}}, {"@type": "ListItem", "position": 2, "item": {"@type": "TouristAttraction", "name": "御本丸公園", "description": "松山城の跡に整えられた公園で、春は桜の名所。酒ミュージアムの隣にあります。"}}, {"@type": "ListItem", "position": 3, "item": {"@type": "TouristAttraction", "name": "鳴子温泉", "description": "同じ大崎市の温泉郷。一ノ蔵には、鳴子の湯の熱で熟成させた酒もあります。", "geo": {"@type": "GeoCoordinates", "latitude": 38.74347, "longitude": 140.71609}}}]}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "蔵旅", "item": "https://rehab-info.github.io/kuratabi/index.html"}, {"@type": "ListItem", "position": 2, "name": "城下の蔵と、桜の丘", "item": "https://rehab-info.github.io/kuratabi/ichinokura.html"}]}]}</script>
+<link rel="stylesheet" href="assets/style.css?v=2">
 </head>
 <body>
 <header class="site-head">
@@ -21,14 +29,32 @@
 
 <main>
   <div class="wrap"><nav class="kt-crumb" aria-label="現在地"><a href="index.html">蔵旅</a><span>›</span><span>大崎・加美・遠田</span><span>›</span><span>一ノ蔵</span></nav></div>
-  <section class="section" style="padding-top:0">
-    <div class="wrap kt-head">
+  <section class="kt-hero-trip">
+    <div class="wrap">
+      <div class="kt-hero-grid">
+        <div class="kt-cover kt-cover-lg" aria-hidden="true"><span class="kt-cover-sugi"></span><span class="kt-cover-name"><span>一</span><span>ノ</span><span>蔵</span></span></div>
+        <div class="kt-hero-text">
+          <div class="eyebrow">大崎市松山 ・ 一ノ蔵をたずねて</div>
+          <h1>城下の蔵と、<br>桜の丘</h1>
+          <div class="kt-tags"><span>電車で行ける</span><span>温泉</span><span>城下町</span><span>花見</span></div>
+          <p class="kt-lead">四つの蔵が合わさって1973年に生まれた一ノ蔵は、甑や麹蓋を使う手づくりを守る蔵です。蔵のある旧松山町には城跡の公園と酒の資料館があり、足をのばせば鳴子の湯へ。</p>
+        </div>
+      </div>
+      <dl class="kt-keyfacts">
+        <div><dt>所要時間</dt><dd>1日(鳴子で1泊も)</dd></div>
+        <div><dt>おすすめの季節</dt><dd>春(城跡の桜)と、冬〜早春(新酒の季節)</dd></div>
+        <div><dt>蔵の見学</dt><dd><span class="tour tour-yes">見学できる</span></dd></div>
+        <div><dt>最寄り駅</dt><dd>松山町駅</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap kt-two">
       <div>
-        <div class="eyebrow">大崎市松山 ・ 1日(鳴子で1泊も)の旅</div>
-        <h1>城下の蔵と、桜の丘</h1>
-        <p class="kt-title">一ノ蔵をたずねて</p>
+        <div class="section-head"><h2>蔵のこと</h2></div>
         <div class="brands"><span>一ノ蔵</span><span>すず音</span></div>
-        <p class="kt-lead">四つの蔵が合わさって1973年に生まれた一ノ蔵は、甑や麹蓋を使う手づくりを守る蔵です。蔵のある旧松山町には城跡の公園と酒の資料館があり、足をのばせば鳴子の湯へ。</p>
+        <p class="kt-body">県内4つの蔵が合同して生まれた県内随一の大手蔵ですが、甑や麹蓋を使う手づくりを大切にしています。「無鑑査本醸造」や発泡清酒「すず音」で知られます。</p>
       </div>
       <div class="kt-facts">
         <dl class="info">
@@ -43,24 +69,43 @@
 
   <section class="section">
     <div class="wrap">
+      <div class="section-head"><h2>地図</h2><p>番号は下の見どころと同じです</p></div>
+      <div class="kt-map" id="kt-map" role="region" aria-label="一ノ蔵と見どころの地図"><p class="kt-map-fallback">地図を読み込んでいます</p></div>
+      <div class="kt-legend"><span><i class="kt-pin kt-pin-kura">蔵</i>一ノ蔵</span><span><i class="kt-pin kt-pin-station">駅</i>松山町駅</span><span><i class="kt-pin kt-pin-spot">1</i>見どころ</span></div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
       <div class="section-head"><h2>まちの見どころ</h2><p>蔵とあわせて歩きたい場所</p></div>
-      <ul class="kt-spots">
-        <li class="kt-spot">
-          <span class="kt-kind" aria-hidden="true">館</span>
-          <div><h3>松山酒ミュージアム</h3><p>酒造りの道具や歴史を伝える資料館。一ノ蔵の催しの会場にもなります。</p></div>
-          <a class="kt-map" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%9D%BE%E5%B1%B1%E9%85%92%E3%83%9F%E3%83%A5%E3%83%BC%E3%82%B8%E3%82%A2%E3%83%A0%20%E5%A4%A7%E5%B4%8E%E5%B8%82" target="_blank" rel="noopener">地図で見る</a>
+      <ol class="kt-spots">
+        <li class="kt-spot" id="spot1">
+          <span class="kt-num" aria-hidden="true">1</span>
+          <div class="kt-spot-body">
+            <div class="kt-spot-head"><span class="kt-kind">館</span><h3>松山酒ミュージアム</h3></div>
+            <p>酒造りの道具や歴史を伝える資料館。一ノ蔵の催しの会場にもなります。</p>
+            
+            <div class="kt-spot-links"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E6%9D%BE%E5%B1%B1%E9%85%92%E3%83%9F%E3%83%A5%E3%83%BC%E3%82%B8%E3%82%A2%E3%83%A0%20%E5%A4%A7%E5%B4%8E%E5%B8%82" target="_blank" rel="noopener">地図</a></div>
+          </div>
         </li>
-        <li class="kt-spot">
-          <span class="kt-kind kt-k2" aria-hidden="true">城跡</span>
-          <div><h3>御本丸公園</h3><p>松山城の跡に整えられた公園で、春は桜の名所。酒ミュージアムの隣にあります。</p></div>
-          <a class="kt-map" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%BE%A1%E6%9C%AC%E4%B8%B8%E5%85%AC%E5%9C%92%20%E5%A4%A7%E5%B4%8E%E5%B8%82%E6%9D%BE%E5%B1%B1" target="_blank" rel="noopener">地図で見る</a>
+        <li class="kt-spot" id="spot2">
+          <span class="kt-num" aria-hidden="true">2</span>
+          <div class="kt-spot-body">
+            <div class="kt-spot-head"><span class="kt-kind">城跡</span><h3>御本丸公園</h3></div>
+            <p>松山城の跡に整えられた公園で、春は桜の名所。酒ミュージアムの隣にあります。</p>
+            
+            <div class="kt-spot-links"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E5%BE%A1%E6%9C%AC%E4%B8%B8%E5%85%AC%E5%9C%92%20%E5%A4%A7%E5%B4%8E%E5%B8%82%E6%9D%BE%E5%B1%B1" target="_blank" rel="noopener">地図</a></div>
+          </div>
         </li>
-        <li class="kt-spot">
-          <span class="kt-kind" aria-hidden="true">湯</span>
-          <div><h3>鳴子温泉</h3><p>同じ大崎市の温泉郷。一ノ蔵には、鳴子の湯の熱で熟成させた酒もあります。</p></div>
-          <a class="kt-map" href="https://www.google.com/maps/search/?api=1&amp;query=%E9%B3%B4%E5%AD%90%E6%B8%A9%E6%B3%89" target="_blank" rel="noopener">地図で見る</a>
+        <li class="kt-spot" id="spot3">
+          <span class="kt-num" aria-hidden="true">3</span>
+          <div class="kt-spot-body">
+            <div class="kt-spot-head"><span class="kt-kind">湯</span><h3>鳴子温泉</h3><span class="kt-onmap">蔵から約39km</span></div>
+            <p>同じ大崎市の温泉郷。一ノ蔵には、鳴子の湯の熱で熟成させた酒もあります。</p>
+            
+            <div class="kt-spot-links"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E9%B3%B4%E5%AD%90%E6%B8%A9%E6%B3%89" target="_blank" rel="noopener">地図</a></div>
+          </div>
         </li>
-      </ul>
+      </ol>
     </div>
   </section>
 
@@ -78,15 +123,28 @@
       <div>
         <div class="section-head"><h2>出かける前に</h2></div>
         <ul class="kt-tips"><li>本社蔵の見学は平日のみ、予約が必要です。</li><li>立春の朝に搾る酒の催しなど、季節の行事に合わせて訪ねるのもおすすめです。</li></ul>
-        <div class="links kt-links"><a href="https://rehab-info.github.io/ikkon/index.html#ichinokura">一ノ蔵 無鑑査本醸造 辛口を一献で見る</a><a href="https://rehab-info.github.io/ikkon/kura.html#ichinokura">一ノ蔵の紹介(一献)</a><a href="https://ichinokura.co.jp/" target="_blank" rel="noopener">蔵の公式サイト</a></div>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="wrap">
+      <div class="section-head"><h2>泊まるなら</h2><p>旅を一泊にのばすなら</p></div>
+      <div class="kt-stays"><div class="kt-stay"><h3>鳴子温泉</h3><p>泉質の多さで知られる温泉郷。こけしの町としても有名です。</p><a href="https://www.google.com/maps/search/?api=1&amp;query=%E9%B3%B4%E5%AD%90%E6%B8%A9%E6%B3%89%20%E6%97%85%E9%A4%A8" target="_blank" rel="noopener">宿を地図で探す</a></div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head"><h2>この蔵の酒</h2></div>
+      <div class="links"><a href="https://rehab-info.github.io/ikkon/index.html#ichinokura">一ノ蔵 無鑑査本醸造 辛口を一献で見る</a><a href="https://rehab-info.github.io/ikkon/kura.html#ichinokura">一ノ蔵の紹介(一献)</a><a href="https://ichinokura.co.jp/" target="_blank" rel="noopener">蔵の公式サイト</a></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
       <div class="section-head"><h2>ほかの蔵旅</h2></div>
-      <div class="kt-next"><a class="kt-trip" href="zao.html"><small>白石市</small><h3>蔵王の水と、白い城</h3><span class="kt-kura">蔵王酒造</span></a><a class="kt-trip" href="saura.html"><small>塩竈市</small><h3>門前の蔵と、港の朝</h3><span class="kt-kura">佐浦</span></a></div>
+      <div class="kt-next"><a class="kt-trip kt-trip-sm" href="zao.html"><div class="kt-cover kt-cover-sm" aria-hidden="true"><span class="kt-cover-sugi"></span><span class="kt-cover-name"><span>蔵</span><span>王</span></span></div><div class="kt-trip-body"><small>白石市 ・ 半日〜1日</small><h3>蔵王の水と、白い城</h3></div></a><a class="kt-trip kt-trip-sm" href="saura.html"><div class="kt-cover kt-cover-sm" aria-hidden="true"><span class="kt-cover-sugi"></span><span class="kt-cover-name"><span>浦</span><span>霞</span></span></div><div class="kt-trip-body"><small>塩竈市 ・ 半日</small><h3>門前の蔵と、港の朝</h3></div></a></div>
     </div>
   </section>
 </main>
@@ -95,8 +153,11 @@
   <div class="wrap">
     <span>見学の受け入れや店の営業は変わることがあります。出かける前に必ず各蔵・各施設へ確かめてください。情報は2026年10月に確認しました。</span>
     <span>試飲をする日は、電車やバス、運転しない人と。お酒は20歳になってから。飲酒運転は法律で禁止されています。</span>
-    <span>蔵旅は、日本酒案内「<a href="https://rehab-info.github.io/ikkon/">一献</a>」の旅のしおりです。</span>
+    <span>蔵旅は、日本酒案内「<a href="https://rehab-info.github.io/ikkon/">一献</a>」の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
   </div>
 </footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>window.KT_MARKERS = [{"t": "kura", "label": "蔵", "name": "一ノ蔵", "lat": 38.50191, "lng": 141.04865}, {"t": "station", "label": "駅", "name": "松山町駅", "lat": 38.51226, "lng": 141.07514}, {"t": "spot", "label": "1", "name": "松山酒ミュージアム", "lat": 38.51166, "lng": 141.05205}];</script>
+<script src="assets/map.js?v=2"></script>
 </body>
 </html>

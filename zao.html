@@ -3,13 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>蔵王の水と、白い城 | 蔵旅 by 一献</title>
+<title>蔵王の水と、白い城|蔵王酒造をたずねる蔵旅</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="蔵王酒造(白石市)をたずねる旅。蔵王連峰の玄関口、城下町・白石でただ一つの蔵です。駅から歩いて蔵の展示館へ、そのまま城と温麺へ。山の麓の水が育てた旨口の酒を、町ごと味わいます。">
+<link rel="canonical" href="https://rehab-info.github.io/kuratabi/zao.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="蔵王の水と、白い城|蔵王酒造をたずねる蔵旅">
+<meta property="og:description" content="蔵王酒造(白石市)をたずねる旅。蔵王連峰の玄関口、城下町・白石でただ一つの蔵です。駅から歩いて蔵の展示館へ、そのまま城と温麺へ。山の麓の水が育てた旨口の酒を、町ごと味わいます。">
+<meta property="og:url" content="https://rehab-info.github.io/kuratabi/zao.html">
+<meta property="og:site_name" content="蔵旅 by 一献">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "TouristTrip", "name": "蔵王の水と、白い城", "description": "蔵王連峰の玄関口、城下町・白石でただ一つの蔵です。駅から歩いて蔵の展示館へ、そのまま城と温麺へ。山の麓の水が育てた旨口の酒を、町ごと味わいます。", "url": "https://rehab-info.github.io/kuratabi/zao.html", "touristType": ["日本酒が好きな人", "酒蔵めぐり"], "itinerary": {"@type": "ItemList", "itemListElement": [{"@type": "ListItem", "position": 1, "item": {"@type": "TouristAttraction", "name": "蔵王酒造展示館", "description": "蔵の正面にあり、酒造りの資料や酒器、甲冑が並びます。試飲と買い物もできます。", "geo": {"@type": "GeoCoordinates", "latitude": 38.00411, "longitude": 140.62115}}}, {"@type": "ListItem", "position": 2, "item": {"@type": "TouristAttraction", "name": "白石城", "description": "伊達家の重臣・片倉氏の居城。三階櫓が木造で復元されています。", "geo": {"@type": "GeoCoordinates", "latitude": 38.00265, "longitude": 140.61715}}}, {"@type": "ListItem", "position": 3, "item": {"@type": "TouristAttraction", "name": "白石温麺", "description": "油を使わずにつくる短い麺が名物。製麺所の直営の食事処で味わえます。"}}, {"@type": "ListItem", "position": 4, "item": {"@type": "TouristAttraction", "name": "蔵王の御釜", "description": "火山が生んだエメラルド色の火口湖。車で足をのばすと一日の旅になります。", "geo": {"@type": "GeoCoordinates", "latitude": 38.13643, "longitude": 140.44954}}}]}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "蔵旅", "item": "https://rehab-info.github.io/kuratabi/index.html"}, {"@type": "ListItem", "position": 2, "name": "蔵王の水と、白い城", "item": "https://rehab-info.github.io/kuratabi/zao.html"}]}]}</script>
+<link rel="stylesheet" href="assets/style.css?v=2">
 </head>
 <body>
 <header class="site-head">
@@ -21,14 +29,32 @@
 
 <main>
   <div class="wrap"><nav class="kt-crumb" aria-label="現在地"><a href="index.html">蔵旅</a><span>›</span><span>県南</span><span>›</span><span>蔵王酒造</span></nav></div>
-  <section class="section" style="padding-top:0">
-    <div class="wrap kt-head">
+  <section class="kt-hero-trip">
+    <div class="wrap">
+      <div class="kt-hero-grid">
+        <div class="kt-cover kt-cover-lg" aria-hidden="true"><span class="kt-cover-sugi"></span><span class="kt-cover-name"><span>蔵</span><span>王</span></span></div>
+        <div class="kt-hero-text">
+          <div class="eyebrow">白石市 ・ 蔵王酒造をたずねて</div>
+          <h1>蔵王の水と、<br>白い城</h1>
+          <div class="kt-tags"><span>電車で行ける</span><span>城下町</span><span>温泉</span><span>山</span></div>
+          <p class="kt-lead">蔵王連峰の玄関口、城下町・白石でただ一つの蔵です。駅から歩いて蔵の展示館へ、そのまま城と温麺へ。山の麓の水が育てた旨口の酒を、町ごと味わいます。</p>
+        </div>
+      </div>
+      <dl class="kt-keyfacts">
+        <div><dt>所要時間</dt><dd>半日〜1日</dd></div>
+        <div><dt>おすすめの季節</dt><dd>春〜秋(蔵王の山道は冬に通れません)</dd></div>
+        <div><dt>蔵の見学</dt><dd><span class="tour tour-yes">見学できる</span></dd></div>
+        <div><dt>最寄り駅</dt><dd>白石駅</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap kt-two">
       <div>
-        <div class="eyebrow">白石市 ・ 半日〜1日の旅</div>
-        <h1>蔵王の水と、白い城</h1>
-        <p class="kt-title">蔵王酒造をたずねて</p>
+        <div class="section-head"><h2>蔵のこと</h2></div>
         <div class="brands"><span>蔵王</span><span>蔵王昇り龍</span></div>
-        <p class="kt-lead">蔵王連峰の玄関口、城下町・白石でただ一つの蔵です。駅から歩いて蔵の展示館へ、そのまま城と温麺へ。山の麓の水が育てた旨口の酒を、町ごと味わいます。</p>
+        <p class="kt-body">白石市で唯一の酒蔵です。敷地の地下50mから汲み上げる伏流水で、旨口でキレのよい酒を造ります。若い蔵人を中心に、生酛造りなど新しい挑戦も続けています。</p>
       </div>
       <div class="kt-facts">
         <dl class="info">
@@ -43,29 +69,52 @@
 
   <section class="section">
     <div class="wrap">
+      <div class="section-head"><h2>地図</h2><p>番号は下の見どころと同じです</p></div>
+      <div class="kt-map" id="kt-map" role="region" aria-label="蔵王酒造と見どころの地図"><p class="kt-map-fallback">地図を読み込んでいます</p></div>
+      <div class="kt-legend"><span><i class="kt-pin kt-pin-kura">蔵</i>蔵王酒造</span><span><i class="kt-pin kt-pin-station">駅</i>白石駅</span><span><i class="kt-pin kt-pin-spot">1</i>見どころ</span></div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
       <div class="section-head"><h2>まちの見どころ</h2><p>蔵とあわせて歩きたい場所</p></div>
-      <ul class="kt-spots">
-        <li class="kt-spot">
-          <span class="kt-kind" aria-hidden="true">館</span>
-          <div><h3>蔵王酒造展示館</h3><p>蔵の正面にあり、入館は無料。酒造りの資料や酒器、甲冑が並び、試飲と買い物もできます。</p></div>
-          <a class="kt-map" href="https://www.google.com/maps/search/?api=1&amp;query=%E8%94%B5%E7%8E%8B%E9%85%92%E9%80%A0%E5%B1%95%E7%A4%BA%E9%A4%A8" target="_blank" rel="noopener">地図で見る</a>
+      <ol class="kt-spots">
+        <li class="kt-spot" id="spot1">
+          <span class="kt-num" aria-hidden="true">1</span>
+          <div class="kt-spot-body">
+            <div class="kt-spot-head"><span class="kt-kind">館</span><h3>蔵王酒造展示館</h3><span class="kt-onmap">地図の「蔵」</span></div>
+            <p>蔵の正面にあり、酒造りの資料や酒器、甲冑が並びます。試飲と買い物もできます。</p>
+            <dl class="kt-info"><dt>料金</dt><dd>入館無料</dd><dt>行き方</dt><dd>JR白石駅から徒歩約5分</dd></dl>
+            <div class="kt-spot-links"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%94%B5%E7%8E%8B%E9%85%92%E9%80%A0%E5%B1%95%E7%A4%BA%E9%A4%A8" target="_blank" rel="noopener">地図</a></div>
+          </div>
         </li>
-        <li class="kt-spot">
-          <span class="kt-kind" aria-hidden="true">城</span>
-          <div><h3>白石城</h3><p>伊達家の重臣・片倉氏の居城。三階櫓が木造で復元されています。</p></div>
-          <a class="kt-map" href="https://www.google.com/maps/search/?api=1&amp;query=%E7%99%BD%E7%9F%B3%E5%9F%8E" target="_blank" rel="noopener">地図で見る</a>
+        <li class="kt-spot" id="spot2">
+          <span class="kt-num" aria-hidden="true">2</span>
+          <div class="kt-spot-body">
+            <div class="kt-spot-head"><span class="kt-kind">城</span><h3>白石城</h3></div>
+            <p>伊達家の重臣・片倉氏の居城。三階櫓が木造で復元されています。</p>
+            
+            <div class="kt-spot-links"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E7%99%BD%E7%9F%B3%E5%9F%8E" target="_blank" rel="noopener">地図</a></div>
+          </div>
         </li>
-        <li class="kt-spot">
-          <span class="kt-kind" aria-hidden="true">味</span>
-          <div><h3>白石温麺</h3><p>油を使わずにつくる短い麺が名物。製麺所の直営の食事処で味わえます。</p></div>
-          <a class="kt-map" href="https://www.google.com/maps/search/?api=1&amp;query=%E7%99%BD%E7%9F%B3%E6%B8%A9%E9%BA%BA%20%E9%A3%9F%E4%BA%8B%E5%87%A6" target="_blank" rel="noopener">地図で見る</a>
+        <li class="kt-spot" id="spot3">
+          <span class="kt-num" aria-hidden="true">3</span>
+          <div class="kt-spot-body">
+            <div class="kt-spot-head"><span class="kt-kind">味</span><h3>白石温麺</h3></div>
+            <p>油を使わずにつくる短い麺が名物。製麺所の直営の食事処で味わえます。</p>
+            
+            <div class="kt-spot-links"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E7%99%BD%E7%9F%B3%E6%B8%A9%E9%BA%BA%20%E9%A3%9F%E4%BA%8B%E5%87%A6" target="_blank" rel="noopener">地図</a></div>
+          </div>
         </li>
-        <li class="kt-spot">
-          <span class="kt-kind" aria-hidden="true">山</span>
-          <div><h3>蔵王の御釜</h3><p>火山が生んだエメラルド色の火口湖。車で足をのばすと一日の旅になります。</p></div>
-          <a class="kt-map" href="https://www.google.com/maps/search/?api=1&amp;query=%E8%94%B5%E7%8E%8B%20%E5%BE%A1%E9%87%9C" target="_blank" rel="noopener">地図で見る</a>
+        <li class="kt-spot" id="spot4">
+          <span class="kt-num" aria-hidden="true">4</span>
+          <div class="kt-spot-body">
+            <div class="kt-spot-head"><span class="kt-kind">山</span><h3>蔵王の御釜</h3><span class="kt-onmap">蔵から約21km</span></div>
+            <p>火山が生んだエメラルド色の火口湖。車で足をのばすと一日の旅になります。</p>
+            
+            <div class="kt-spot-links"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E8%94%B5%E7%8E%8B%20%E5%BE%A1%E9%87%9C" target="_blank" rel="noopener">地図</a></div>
+          </div>
         </li>
-      </ul>
+      </ol>
     </div>
   </section>
 
@@ -82,16 +131,29 @@
       </div>
       <div>
         <div class="section-head"><h2>出かける前に</h2></div>
-        <ul class="kt-tips"><li>蔵の中の見学は事前の相談が必要です。杜氏の都合で受けられない日もあります。</li><li>蔵王エコーラインは冬のあいだ通れません。</li></ul>
-        <div class="links kt-links"><a href="https://rehab-info.github.io/ikkon/index.html#zao">蔵王 特別純米 Kを一献で見る</a><a href="https://rehab-info.github.io/ikkon/kura.html#zao">蔵王酒造の紹介(一献)</a><a href="http://www.zaoshuzo.com/" target="_blank" rel="noopener">蔵の公式サイト</a></div>
+        <ul class="kt-tips"><li>蔵の中の見学は事前の相談が必要です。杜氏の都合で受けられない日もあります。</li><li>蔵王エコーラインは冬のあいだ通れません。</li><li>御釜へ車で行く日は、運転する人は試飲できません。</li></ul>
       </div>
     </div>
   </section>
 
   <section class="section">
     <div class="wrap">
+      <div class="section-head"><h2>泊まるなら</h2><p>旅を一泊にのばすなら</p></div>
+      <div class="kt-stays"><div class="kt-stay"><h3>遠刈田温泉</h3><p>蔵王の麓の温泉街。こけしの工房が並び、御釜へ向かう拠点になります。</p><a href="https://www.google.com/maps/search/?api=1&amp;query=%E9%81%A0%E5%88%88%E7%94%B0%E6%B8%A9%E6%B3%89%20%E6%97%85%E9%A4%A8" target="_blank" rel="noopener">宿を地図で探す</a></div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head"><h2>この蔵の酒</h2></div>
+      <div class="links"><a href="https://rehab-info.github.io/ikkon/index.html#zao">蔵王 特別純米 Kを一献で見る</a><a href="https://rehab-info.github.io/ikkon/kura.html#zao">蔵王酒造の紹介(一献)</a><a href="http://www.zaoshuzo.com/" target="_blank" rel="noopener">蔵の公式サイト</a></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
       <div class="section-head"><h2>ほかの蔵旅</h2></div>
-      <div class="kt-next"><a class="kt-trip" href="saura.html"><small>塩竈市</small><h3>門前の蔵と、港の朝</h3><span class="kt-kura">佐浦</span></a><a class="kt-trip" href="ichinokura.html"><small>大崎市松山</small><h3>城下の蔵と、桜の丘</h3><span class="kt-kura">一ノ蔵</span></a></div>
+      <div class="kt-next"><a class="kt-trip kt-trip-sm" href="saura.html"><div class="kt-cover kt-cover-sm" aria-hidden="true"><span class="kt-cover-sugi"></span><span class="kt-cover-name"><span>浦</span><span>霞</span></span></div><div class="kt-trip-body"><small>塩竈市 ・ 半日</small><h3>門前の蔵と、港の朝</h3></div></a><a class="kt-trip kt-trip-sm" href="ichinokura.html"><div class="kt-cover kt-cover-sm" aria-hidden="true"><span class="kt-cover-sugi"></span><span class="kt-cover-name"><span>一</span><span>ノ</span><span>蔵</span></span></div><div class="kt-trip-body"><small>大崎市松山 ・ 1日(鳴子で1泊も)</small><h3>城下の蔵と、桜の丘</h3></div></a></div>
     </div>
   </section>
 </main>
@@ -100,8 +162,11 @@
   <div class="wrap">
     <span>見学の受け入れや店の営業は変わることがあります。出かける前に必ず各蔵・各施設へ確かめてください。情報は2026年10月に確認しました。</span>
     <span>試飲をする日は、電車やバス、運転しない人と。お酒は20歳になってから。飲酒運転は法律で禁止されています。</span>
-    <span>蔵旅は、日本酒案内「<a href="https://rehab-info.github.io/ikkon/">一献</a>」の旅のしおりです。</span>
+    <span>蔵旅は、日本酒案内「<a href="https://rehab-info.github.io/ikkon/">一献</a>」の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
   </div>
 </footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>window.KT_MARKERS = [{"t": "kura", "label": "蔵", "name": "蔵王酒造", "lat": 38.00411, "lng": 140.62115}, {"t": "station", "label": "駅", "name": "白石駅", "lat": 38.00327, "lng": 140.62573}, {"t": "spot", "label": "2", "name": "白石城", "lat": 38.00265, "lng": 140.61715}];</script>
+<script src="assets/map.js?v=2"></script>
 </body>
 </html>

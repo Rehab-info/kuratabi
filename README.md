@@ -11,6 +11,9 @@ data/kuratabi.json  旅のしおりのデータ(ここを編集して旅を追�
 data/kura.json      宮城の蔵のデータ(一献の data/kura.json を写したもの)
 assets/style.css    デザイン(一献の style.css に蔵旅の部品を足したもの)
 tools/build.py      ページを作り直すスクリプト
+assets/map.js       しおりの地図(Leaflet と OpenStreetMap)
+assets/filter.js    入口の絞り込み
+images/             写真(撮影したもの・許可を得たもの)
 .nojekyll           GitHub Pages の Jekyll 処理を無効化
 ```
 
@@ -23,24 +26,37 @@ tools/build.py      ページを作り直すスクリプト
 
 ## 旅のしおりを足す
 
-`data/kuratabi.json` の `trips` に1件追加し、`python3 tools/build.py` を実行します(GitHub に上げれば自動でも実行されます)。
+`data/kuratabi.json` の `trips` に1件追加し、`python3 tools/build.py` を実行します(GitHub に上げれば自動でも実行されます)。蔵の地図上の位置は `kuraGeo` に書きます。
 
 ```json
 {
   "kura": "otokoyama",          // data/kura.json の蔵 ID
   "with": [],                   // 同じ町にあるほかの蔵の ID(任意)
   "ikkon": [{"id": "soutenden", "name": "蒼天伝 …"}],  // 一献で紹介している銘柄(任意)
-  "title": "旅の名前(◯◯と、◯◯)",
+  "title": "旅の名前(◯◯と、◯◯)",   // 「、」のところで改行して表示します
   "lead": "2〜3文の紹介",
   "access": "行き方",
-  "length": "半日 / 1日 など",
-  "spots": [{"kind": "港", "name": "見どころの名前", "note": "一言", "map": "地図検索の言葉"}],
+  "station": {"name": "最寄り駅", "geo": [緯度, 経度]},
+  "length": "半日 / 1日 など(表示用)",
+  "lengthKey": "half",          // half=半日 day=1日(絞り込み用)
+  "season": "おすすめの季節",
+  "tags": ["電車で行ける", "温泉"],  // 入口の絞り込みに使われます
+  "cover": {"src": "images/otokoyama.jpg", "alt": "写真の説明", "credit": "撮影:◯◯"},  // 写真がない間は null
+  "spots": [{"kind": "港", "name": "見どころ", "note": "一言", "map": "地図検索の言葉",
+             "geo": [緯度, 経度],          // 任意。あると地図に番号で出ます
+             "far": true,                  // 任意。蔵から遠い場所は地図に入れず距離だけ出す
+             "atKura": true,               // 任意。蔵と同じ場所(直営店など)
+             "info": {"営業": "…", "定休": "…", "料金": "…"},  // 任意。確かめた情報だけ
+             "url": "公式サイト"}],
   "course": [{"time": "10:00", "text": "することの説明"}],
+  "stay": [{"name": "◯◯温泉", "note": "一言", "map": "◯◯温泉 旅館"}],
   "tips": ["出かける前の注意"]
 }
 ```
 
-- `kind` は見どころの種類を1〜2文字で(社・城・湯・港・市場・館 など)。金色の印に入ります。
+- 写真は `images/` に置き、`cover` に書くと表紙になります。自分で撮影したもの・許可を得たものだけを使ってください。写真がない間は、青海波の地に銘柄を縦に置いた表紙になります。
+- 緯度・経度は、Google マップで場所を長押しすると出る数字(例:38.3164, 141.0193)をそのまま書けます。
+- 「泊まるなら」のリンクは、いまは地図の検索です。宿泊予約サイトの提携リンクができたら差し替えます。
 - 見どころの情報は、実際に行ったときや公式サイトで確かめてから書いてください。
 
 ## 蔵の情報を更新する

@@ -4,29 +4,48 @@
 旅のしおりを足すときは data/kuratabi.json の trips に1件追加して、このスクリプトを実行してください。
 蔵の名前・見学の可否・創業などは data/kura.json から読み込みます(一献の data/kura.json を写したもの)。
 GitHub に上げると、公開の仕組みでも自動で実行されます。
-assets/style.css を直したら、下の VERSION を1つ上げてください(閲覧者のブラウザに古い版が残らなくなります)。
+assets/ の CSS・JS を直したら、下の VERSION を1つ上げてください(閲覧者のブラウザに古い版が残らなくなります)。
 """
 import html
 import json
+import math
 import sys
 from pathlib import Path
 from urllib.parse import quote
 
-VERSION = "1"
-IKKON = "https://rehab-info.github.io/ikkon/"  # 一献の住所(独自ドメインに移したらここを直す)
+VERSION = "2"
+SITE = "https://rehab-info.github.io/kuratabi/"  # 蔵旅の住所(独自ドメインに移したらここを直す)
+IKKON = "https://rehab-info.github.io/ikkon/"    # 一献の住所
+LEAFLET = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/"
 
 ROOT = Path(__file__).resolve().parent.parent
 data = json.loads((ROOT / "data/kuratabi.json").read_text(encoding="utf-8"))
 kura = {k["id"]: k for k in json.loads((ROOT / "data/kura.json").read_text(encoding="utf-8"))}
+kura_geo = data.get("kuraGeo", {})
 kura_order = list(kura)
 e = html.escape
 
 AREAS = ["仙台・県央", "県南", "塩竈", "大崎・加美・遠田", "栗原・登米", "石巻・気仙沼"]
 TOUR = {"yes": ("見学できる", "tour-yes"), "partial": ("一部見学", "tour-ask"), "ask": ("要相談", "tour-ask"), "no": ("見学不可", "tour-no")}
+LENGTH = {"half": "半日", "day": "1日"}
+# 酒造りの暦(一般的な目安。蔵によって前後します)
+CALENDAR = [
+    ("仕込み", "蔵がいちばん忙しい季節。見学を休む蔵も", [11, 12, 1, 2, 3]),
+    ("新酒・しぼりたて", "その冬に搾った酒が出回る", [12, 1, 2, 3]),
+    ("蔵開き", "春先に蔵を開く催しが多い", [2, 3, 4, 5]),
+    ("夏酒", "軽やかな夏向けの酒", [6, 7, 8]),
+    ("ひやおろし", "夏を越して熟した秋の酒", [9, 10, 11]),
+]
 
 # 打ち間違いで旅のしおりが黙って消えたり壊れたりしないよう、先に確かめる
-TRIP_KEYS = ["kura", "title", "lead", "access", "length", "spots", "course"]
+TRIP_KEYS = ["kura", "title", "lead", "access", "length", "lengthKey", "spots", "course"]
 errors, seen = [], set()
+
+
+def bad_geo(g):
+    return not (isinstance(g, list) and len(g) == 2 and 37 < g[0] < 40 and 139 < g[1] < 143)
+
+
 for i, t in enumerate(data["trips"], start=1):
     where = t.get("kura") or f"{i}番目の旅"
     errors += [f"{where}: 「{k}」がありません" for k in TRIP_KEYS if not t.get(k)]
@@ -35,13 +54,19 @@ for i, t in enumerate(data["trips"], start=1):
     if t.get("kura") in seen:
         errors.append(f"{where}: 同じ蔵の旅が2つあります")
     seen.add(t.get("kura"))
+    if t.get("lengthKey") and t["lengthKey"] not in LENGTH:
+        errors.append(f"{where}: lengthKey は half か day にしてください")
     for w in t.get("with", []):
         if w not in kura:
             errors.append(f"{where}: with の蔵 ID「{w}」が data/kura.json にありません")
     for j, s in enumerate(t.get("spots", []), start=1):
         errors += [f"{where}: 見どころ{j}に「{k}」がありません" for k in ["kind", "name", "note"] if not s.get(k)]
+        if "geo" in s and bad_geo(s["geo"]):
+            errors.append(f"{where}: 見どころ{j}の geo が宮城の範囲を外れています")
     for j, c in enumerate(t.get("course", []), start=1):
         errors += [f"{where}: 旅程{j}に「{k}」がありません" for k in ["time", "text"] if not c.get(k)]
+    if t.get("kura") in kura_geo and bad_geo(kura_geo[t["kura"]]):
+        errors.append(f"{where}: kuraGeo の座標が宮城の範囲を外れています")
 for k in kura.values():
     if k["area"] not in AREAS:
         errors.append(f'{k["id"]}: 地域「{k["area"]}」が AREAS にありません')
@@ -51,9 +76,14 @@ if errors:
     sys.exit("データに誤りがあります:\n" + "\n".join(errors))
 
 trips = sorted(data["trips"], key=lambda t: kura_order.index(t["kura"]))
+all_tags = []
+for t in trips:
+    for g in t.get("tags", []):
+        if g not in all_tags:
+            all_tags.append(g)
 
 
-def shell(title, desc, body, home=False):
+def shell(title, desc, body, path, home=False, extra_head="", tail=""):
     cur = ' aria-current="page"' if home else ""
     return f'''<!doctype html>
 <html lang="ja">
@@ -63,10 +93,16 @@ def shell(title, desc, body, home=False):
 <title>{e(title)}</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="{e(desc)}">
+<link rel="canonical" href="{SITE}{path}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{e(title)}">
+<meta property="og:description" content="{e(desc)}">
+<meta property="og:url" content="{SITE}{path}">
+<meta property="og:site_name" content="蔵旅 by 一献">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
-<link rel="stylesheet" href="assets/style.css?v={VERSION}">
+{extra_head}<link rel="stylesheet" href="assets/style.css?v={VERSION}">
 </head>
 <body>
 <header class="site-head">
@@ -84,10 +120,10 @@ def shell(title, desc, body, home=False):
   <div class="wrap">
     <span>見学の受け入れや店の営業は変わることがあります。出かける前に必ず各蔵・各施設へ確かめてください。情報は{e(data["checked"])}に確認しました。</span>
     <span>試飲をする日は、電車やバス、運転しない人と。お酒は20歳になってから。飲酒運転は法律で禁止されています。</span>
-    <span>蔵旅は、日本酒案内「<a href="{IKKON}">一献</a>」の旅のしおりです。</span>
+    <span>蔵旅は、日本酒案内「<a href="{IKKON}">一献</a>」の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
   </div>
 </footer>
-</body>
+{tail}</body>
 </html>
 '''
 
@@ -96,35 +132,139 @@ def map_link(q):
     return f"https://www.google.com/maps/search/?api=1&query={quote(q)}"
 
 
+def cover(t, k, size="lg"):
+    """表紙。写真があれば写真、なければ青海波の地に縦書きの表題。"""
+    c = t.get("cover")
+    if c and (ROOT / c["src"]).exists():
+        credit = f'<figcaption>{e(c.get("credit", ""))}</figcaption>' if c.get("credit") else ""
+        return f'<figure class="kt-cover kt-cover-{size} has-photo"><img src="{e(c["src"])}" alt="{e(c.get("alt", ""))}" loading="{"eager" if size == "lg" else "lazy"}">{credit}</figure>'
+    return f'<div class="kt-cover kt-cover-{size}" aria-hidden="true"><span class="kt-cover-sugi"></span><span class="kt-cover-name">{"".join(f"<span>{e(ch)}</span>" for ch in k["brands"][0])}</span></div>'
+
+
+def dist_km(a, b):
+    r = math.radians
+    dlat, dlon = r(b[0] - a[0]), r(b[1] - a[1])
+    h = math.sin(dlat / 2) ** 2 + math.cos(r(a[0])) * math.cos(r(b[0])) * math.sin(dlon / 2) ** 2
+    return 6371 * 2 * math.asin(math.sqrt(h))
+
+
 # ---------- 蔵ごとのページ ----------
 for t in trips:
     k = kura[t["kura"]]
+    kg = kura_geo.get(k["id"])
     label, cls = TOUR[k["tour"]]
     brands = "".join(f"<span>{e(b)}</span>" for b in k["brands"])
     others = "".join(f'<dt>近くの蔵</dt><dd><a href="{IKKON}kura.html#{e(w)}">{e(kura[w]["name"])}</a>(見学:{TOUR[kura[w]["tour"]][0]})</dd>' for w in t.get("with", []))
-    spots = "\n".join(f'''        <li class="kt-spot">
-          <span class="kt-kind{" kt-k2" if len(s["kind"]) > 1 else ""}" aria-hidden="true">{e(s["kind"])}</span>
-          <div><h3>{e(s["name"])}</h3><p>{e(s["note"])}</p></div>
-          <a class="kt-map" href="{e(map_link(s.get("map") or s["name"]))}" target="_blank" rel="noopener">地図で見る</a>
-        </li>''' for s in t["spots"])
+
+    # 地図の点:蔵・駅・見どころ(遠いものは地図に入れず一覧だけ)
+    markers, n = [], 0
+    if kg:
+        markers.append({"t": "kura", "label": "蔵", "name": k["name"], "lat": kg[0], "lng": kg[1]})
+    st = t.get("station")
+    if st and st.get("geo"):
+        markers.append({"t": "station", "label": "駅", "name": st["name"], "lat": st["geo"][0], "lng": st["geo"][1]})
+    spot_rows = []
+    for s in t["spots"]:
+        n += 1
+        on_map = ""
+        if s.get("atKura"):
+            on_map = '<span class="kt-onmap">地図の「蔵」</span>'
+        elif s.get("geo") and not s.get("far"):
+            markers.append({"t": "spot", "label": str(n), "name": s["name"], "lat": s["geo"][0], "lng": s["geo"][1]})
+            on_map = ""
+        elif s.get("geo") and s.get("far") and kg:
+            on_map = f'<span class="kt-onmap">蔵から約{round(dist_km(kg, s["geo"]))}km</span>'
+        info = ""
+        if s.get("info"):
+            info = '<dl class="kt-info">' + "".join(f"<dt>{e(a)}</dt><dd>{e(b)}</dd>" for a, b in s["info"].items()) + "</dl>"
+        links = [f'<a href="{e(map_link(s.get("map") or s["name"]))}" target="_blank" rel="noopener">地図</a>']
+        if s.get("url"):
+            links.append(f'<a href="{e(s["url"])}" target="_blank" rel="noopener">公式サイト</a>')
+        spot_rows.append(f'''        <li class="kt-spot" id="spot{n}">
+          <span class="kt-num" aria-hidden="true">{n}</span>
+          <div class="kt-spot-body">
+            <div class="kt-spot-head"><span class="kt-kind">{e(s["kind"])}</span><h3>{e(s["name"])}</h3>{on_map}</div>
+            <p>{e(s["note"])}</p>
+            {info}
+            <div class="kt-spot-links">{"".join(links)}</div>
+          </div>
+        </li>''')
+
     course = "\n".join(f'          <li><time>{e(c["time"])}</time><span class="dot" aria-hidden="true"></span><span>{e(c["text"])}</span></li>' for c in t["course"])
     tips = '<ul class="kt-tips">' + "".join(f"<li>{e(x)}</li>" for x in t.get("tips", [])) + "</ul>" if t.get("tips") else ""
-    links = [f'<a href="{IKKON}index.html#{e(s["id"])}">{e(s["name"])}を一献で見る</a>' for s in t.get("ikkon", [])]
-    links.append(f'<a href="{IKKON}kura.html#{e(k["id"])}">{e(k["name"])}の紹介(一献)</a>')
+    stays = "".join(f'''<div class="kt-stay"><h3>{e(s["name"])}</h3><p>{e(s["note"])}</p><a href="{e(map_link(s.get("map") or s["name"]))}" target="_blank" rel="noopener">宿を地図で探す</a></div>''' for s in t.get("stay", []))
+    sake_links = [f'<a href="{IKKON}index.html#{e(s["id"])}">{e(s["name"])}を一献で見る</a>' for s in t.get("ikkon", [])]
+    sake_links.append(f'<a href="{IKKON}kura.html#{e(k["id"])}">{e(k["name"])}の紹介(一献)</a>')
     if k.get("url"):
-        links.append(f'<a href="{e(k["url"])}" target="_blank" rel="noopener">蔵の公式サイト</a>')
-    nexts = "".join(f'<a class="kt-trip" href="{e(o["kura"])}.html"><small>{e(kura[o["kura"]]["city"])}</small><h3>{e(o["title"])}</h3><span class="kt-kura">{e(kura[o["kura"]]["name"])}</span></a>'
+        sake_links.append(f'<a href="{e(k["url"])}" target="_blank" rel="noopener">蔵の公式サイト</a>')
+    nexts = "".join(f'''<a class="kt-trip kt-trip-sm" href="{e(o["kura"])}.html">{cover(o, kura[o["kura"]], "sm")}<div class="kt-trip-body"><small>{e(kura[o["kura"]]["city"])} ・ {e(o["length"])}</small><h3>{e(o["title"])}</h3></div></a>'''
                     for o in trips if o is not t)
+    tags = "".join(f"<span>{e(g)}</span>" for g in t.get("tags", []))
+
+    map_html, tail, head = "", "", ""
+    if len(markers) >= 2:
+        head = f'<link rel="stylesheet" href="{LEAFLET}leaflet.css">\n'
+        tail = f'''<script src="{LEAFLET}leaflet.js"></script>
+<script>window.KT_MARKERS = {json.dumps(markers, ensure_ascii=False)};</script>
+<script src="assets/map.js?v={VERSION}"></script>
+'''
+        map_html = f'''  <section class="section">
+    <div class="wrap">
+      <div class="section-head"><h2>地図</h2><p>番号は下の見どころと同じです</p></div>
+      <div class="kt-map" id="kt-map" role="region" aria-label="{e(k["name"])}と見どころの地図"><p class="kt-map-fallback">地図を読み込んでいます</p></div>
+      <div class="kt-legend"><span><i class="kt-pin kt-pin-kura">蔵</i>{e(k["name"])}</span>{f'<span><i class="kt-pin kt-pin-station">駅</i>{e(st["name"])}</span>' if st else ""}<span><i class="kt-pin kt-pin-spot">1</i>見どころ</span></div>
+    </div>
+  </section>
+'''
+
+    # 検索エンジン向けの構造化データ(旅程と観光地)
+    items = []
+    for i, s in enumerate(t["spots"], start=1):
+        place = {"@type": "TouristAttraction", "name": s["name"], "description": s["note"]}
+        g = kg if s.get("atKura") else s.get("geo")
+        if g:
+            place["geo"] = {"@type": "GeoCoordinates", "latitude": g[0], "longitude": g[1]}
+        items.append({"@type": "ListItem", "position": i, "item": place})
+    ld = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {"@type": "TouristTrip", "name": t["title"], "description": t["lead"], "url": f'{SITE}{k["id"]}.html',
+             "touristType": ["日本酒が好きな人", "酒蔵めぐり"],
+             "itinerary": {"@type": "ItemList", "itemListElement": items}},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "蔵旅", "item": f"{SITE}index.html"},
+                {"@type": "ListItem", "position": 2, "name": t["title"], "item": f'{SITE}{k["id"]}.html'}]},
+        ],
+    }
+    head += f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
 
     body = f'''  <div class="wrap"><nav class="kt-crumb" aria-label="現在地"><a href="index.html">蔵旅</a><span>›</span><span>{e(k["area"])}</span><span>›</span><span>{e(k["name"])}</span></nav></div>
-  <section class="section" style="padding-top:0">
-    <div class="wrap kt-head">
+  <section class="kt-hero-trip">
+    <div class="wrap">
+      <div class="kt-hero-grid">
+        {cover(t, k)}
+        <div class="kt-hero-text">
+          <div class="eyebrow">{e(k["city"])} ・ {e(k["name"])}をたずねて</div>
+          <h1>{e(t["title"]).replace("、", "、<br>")}</h1>
+          <div class="kt-tags">{tags}</div>
+          <p class="kt-lead">{e(t["lead"])}</p>
+        </div>
+      </div>
+      <dl class="kt-keyfacts">
+        <div><dt>所要時間</dt><dd>{e(t["length"])}</dd></div>
+        <div><dt>おすすめの季節</dt><dd>{e(t.get("season", "通年"))}</dd></div>
+        <div><dt>蔵の見学</dt><dd><span class="tour {cls}">{label}</span></dd></div>
+        <div><dt>最寄り駅</dt><dd>{e(st["name"]) if st else "—"}</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap kt-two">
       <div>
-        <div class="eyebrow">{e(k["city"])} ・ {e(t["length"])}の旅</div>
-        <h1>{e(t["title"])}</h1>
-        <p class="kt-title">{e(k["name"])}をたずねて</p>
+        <div class="section-head"><h2>蔵のこと</h2></div>
         <div class="brands">{brands}</div>
-        <p class="kt-lead">{e(t["lead"])}</p>
+        <p class="kt-body">{e(k["intro"])}</p>
       </div>
       <div class="kt-facts">
         <dl class="info">
@@ -137,12 +277,12 @@ for t in trips:
     </div>
   </section>
 
-  <section class="section">
+{map_html}  <section class="section">
     <div class="wrap">
       <div class="section-head"><h2>まちの見どころ</h2><p>蔵とあわせて歩きたい場所</p></div>
-      <ul class="kt-spots">
-{spots}
-      </ul>
+      <ol class="kt-spots">
+{chr(10).join(spot_rows)}
+      </ol>
     </div>
   </section>
 
@@ -157,8 +297,21 @@ for t in trips:
       <div>
         <div class="section-head"><h2>出かける前に</h2></div>
         {tips}
-        <div class="links kt-links">{"".join(links)}</div>
       </div>
+    </div>
+  </section>
+
+  {f"""<section class="section">
+    <div class="wrap">
+      <div class="section-head"><h2>泊まるなら</h2><p>旅を一泊にのばすなら</p></div>
+      <div class="kt-stays">{stays}</div>
+    </div>
+  </section>""" if stays else ""}
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head"><h2>この蔵の酒</h2></div>
+      <div class="links">{"".join(sake_links)}</div>
     </div>
   </section>
 
@@ -169,17 +322,29 @@ for t in trips:
     </div>
   </section>'''
     desc = f'{k["name"]}({k["city"]})をたずねる旅。{t["lead"]}'[:120]
-    (ROOT / f'{k["id"]}.html').write_text(shell(f'{t["title"]} | 蔵旅 by 一献', desc, body), encoding="utf-8")
+    page = f'{k["id"]}.html'
+    (ROOT / page).write_text(shell(f'{t["title"]}|{k["name"]}をたずねる蔵旅', desc, body, page, extra_head=head, tail=tail), encoding="utf-8")
 
 # ---------- 入口のページ ----------
-cards = "\n".join(f'''        <a class="kt-trip" href="{e(t["kura"])}.html">
-          <small>{e(kura[t["kura"]]["city"])} ・ {e(t["length"])}</small>
-          <h3>{e(t["title"])}</h3>
-          <span class="kt-kura">{e(kura[t["kura"]]["name"])}({"・".join(e(b) for b in kura[t["kura"]]["brands"])})</span>
-          <p>{e(t["lead"])}</p>
-          <span class="series-more">旅のしおりを開く</span>
+cards = "\n".join(f'''        <a class="kt-trip" href="{e(t["kura"])}.html" data-tags="{e("|".join(t.get("tags", [])))}" data-length="{e(t["lengthKey"])}">
+          {cover(t, kura[t["kura"]], "md")}
+          <div class="kt-trip-body">
+            <small>{e(kura[t["kura"]]["city"])} ・ {e(t["length"])}</small>
+            <h3>{e(t["title"])}</h3>
+            <span class="kt-kura">{e(kura[t["kura"]]["name"])}({"・".join(e(b) for b in kura[t["kura"]]["brands"])})</span>
+            <p>{e(t["lead"])}</p>
+            <div class="kt-tags">{"".join(f"<span>{e(g)}</span>" for g in t.get("tags", []))}</div>
+          </div>
         </a>''' for t in trips)
 side = "".join(f'<a href="{e(t["kura"])}.html">{e(t["title"])}</a>' for t in trips)
+tag_chips = "".join(f'<button type="button" class="chip" data-tag="{e(g)}" aria-pressed="false">{e(g)}</button>' for g in all_tags)
+len_chips = "".join(f'<button type="button" class="chip" data-len="{k}" aria-pressed="false">{v}</button>' for k, v in LENGTH.items())
+
+months = "".join(f'<span class="kt-m">{m}</span>' for m in range(1, 13))
+cal_rows = "".join(
+    f'<div class="kt-cal-row"><div class="kt-cal-name"><b>{e(nm)}</b><small>{e(note)}</small></div><div class="kt-cal-bar">'
+    + "".join(f'<span class="{"on" if m in ms else ""}"></span>' for m in range(1, 13)) + "</div></div>"
+    for nm, note, ms in CALENDAR)
 
 rest_html = []
 for a in AREAS:
@@ -205,12 +370,29 @@ body = f'''  <section class="hero-c kt-hero">
     <div class="hc-foot"><span class="hc-seal" aria-hidden="true">旅</span></div>
   </section>
 
-  <section class="section">
+  <section class="section" id="trips">
     <div class="wrap">
       <div class="section-head"><h2>旅のしおり</h2><p>蔵と、そのまわりの見どころと、一日の流れ</p></div>
-      <div class="kt-trips">
+      <div class="kt-filter" role="group" aria-label="旅のしおりを絞り込む">
+        <div class="chips">{tag_chips}</div>
+        <div class="chips">{len_chips}</div>
+      </div>
+      <p class="kt-count" id="kt-count" aria-live="polite"></p>
+      <div class="kt-trips" id="kt-trips">
 {cards}
       </div>
+      <p class="kt-empty" id="kt-empty" hidden>この組み合わせの旅は、まだありません。条件を一つ外してみてください。</p>
+    </div>
+  </section>
+
+  <section class="section" id="calendar">
+    <div class="wrap">
+      <div class="section-head"><h2>酒蔵の一年</h2><p>いつ訪ねるかを決める目安に</p></div>
+      <div class="kt-cal">
+        <div class="kt-cal-row kt-cal-head"><div></div><div class="kt-cal-bar">{months}</div></div>
+        {cal_rows}
+      </div>
+      <p class="notice">時期は一般的な目安で、蔵によって前後します。仕込みの季節は見学を休む蔵もあるので、行く前に確かめてください。</p>
     </div>
   </section>
 
@@ -221,5 +403,8 @@ body = f'''  <section class="hero-c kt-hero">
       <p class="notice">蔵の名前を押すと、一献の「宮城の蔵」で紹介を読めます。</p>
     </div>
   </section>'''
-(ROOT / "index.html").write_text(shell("蔵旅 by 一献", f"宮城の酒蔵をたずね、蔵のまわりの見どころと一日の旅程を紹介する旅のしおり。いまは{len(trips)}編。", body, home=True), encoding="utf-8")
+tail = f'<script src="assets/filter.js?v={VERSION}"></script>\n'
+ld = {"@context": "https://schema.org", "@type": "WebSite", "name": "蔵旅 by 一献", "url": SITE}
+head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
+(ROOT / "index.html").write_text(shell("蔵旅 by 一献|酒蔵をたずねる旅のしおり", f"宮城の酒蔵をたずね、蔵のまわりの見どころと一日の旅程を紹介する旅のしおり。いまは{len(trips)}編。", body, "", home=True, extra_head=head, tail=tail), encoding="utf-8")
 print("蔵旅", len(trips), "編")
