@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: "23 21 * * 0"  # 毎週月曜 6:23(日本時間)に楽天の宿の情報を取り直す
 
 permissions:
   contents: read
@@ -23,6 +25,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build pages from data
+        env:
+          RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
         run: python3 tools/build.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

@@ -9,11 +9,17 @@ assets/ の CSS・JS を直したら、下の VERSION を1つ上げてくださ�
 import html
 import json
 import math
+import os
 import sys
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
-VERSION = "3"
+VERSION = "4"
 SITE = "https://rehab-info.github.io/kuratabi/"  # 蔵旅の住所(独自ドメインに移したらここを直す)
 IKKON = "https://rehab-info.github.io/ikkon/"    # 一献の住所
 LEAFLET = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/"
@@ -130,6 +136,72 @@ def shell(title, desc, body, path, home=False, extra_head="", tail=""):
 '''
 
 
+# ---------- 楽天トラベル(宿の情報) ----------
+# 公開の仕組み(GitHub Actions)の中だけで、楽天のアプリIDとアクセスキーを使って宿を取ってくる。
+# キーがない・楽天が応答しないときは、宿のカードを出さずに公開を続ける。結果は rakuten-status.json に書く。
+TRAVEL_API = "https://openapi.rakuten.co.jp/engine/api/Travel/KeywordHotelSearch/20260731"
+APP_ID = os.environ.get("RAKUTEN_APP_ID", "").strip()
+ACCESS_KEY = os.environ.get("RAKUTEN_ACCESS_KEY", "").strip()
+rk_status = {"fetchedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"), "ok": [], "empty": [], "errors": []}
+
+
+def basic_infos(node):
+    """応答の形(formatVersion)に関係なく、hotelBasicInfo と評価を探し出す"""
+    found = []
+    if isinstance(node, dict):
+        if "hotelBasicInfo" in node:
+            found.append(node["hotelBasicInfo"])
+        for v in node.values():
+            found += basic_infos(v)
+    elif isinstance(node, list):
+        for v in node:
+            found += basic_infos(v)
+    return found
+
+
+def fetch_hotels(keyword, n=3):
+    if not APP_ID or not ACCESS_KEY:
+        return []
+    q = {"applicationId": APP_ID, "accessKey": ACCESS_KEY, "affiliateId": RAKUTEN_AFF, "keyword": keyword,
+         "hits": 10, "datumType": 1, "formatVersion": 2}
+    req = urllib.request.Request(TRAVEL_API + "?" + urllib.parse.urlencode(q), headers={
+        "User-Agent": "kuratabi-site/1.0", "Referer": "https://rehab-info.github.io/", "Origin": "https://rehab-info.github.io", "accessKey": ACCESS_KEY})
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            data = json.load(r)
+    except urllib.error.HTTPError as ex:
+        rk_status["errors"].append(f"「{keyword}」: HTTP {ex.code} {ex.read().decode('utf-8', 'replace')[:200]}")
+        return []
+    except Exception as ex:
+        rk_status["errors"].append(f"「{keyword}」: {ex}")
+        return []
+    finally:
+        time.sleep(1.1)  # 楽天への負担を減らすため、1秒に1回まで
+    out = []
+    for h in basic_infos(data):
+        url = h.get("hotelInformationUrl") or h.get("planListUrl")
+        img = h.get("hotelImageUrl") or h.get("hotelThumbnailUrl")
+        if not url or not h.get("hotelName"):
+            continue
+        out.append({"name": h["hotelName"], "url": url, "img": img or "", "min": h.get("hotelMinCharge"),
+                    "review": h.get("reviewAverage"), "count": h.get("reviewCount"), "access": (h.get("access") or "")[:60]})
+        if len(out) >= n:
+            break
+    (rk_status["ok"] if out else rk_status["empty"]).append(keyword)
+    return out
+
+
+def hotel_cards(hotels):
+    if not hotels:
+        return ""
+    def one(h):
+        img = f'<img src="{e(h["img"])}" alt="" loading="lazy" referrerpolicy="no-referrer">' if h["img"] else '<span class="kt-hotel-noimg"></span>'
+        price = f'<b>1人 {int(h["min"]):,}円〜</b>' if h.get("min") else ""
+        review = f'<span class="kt-hotel-review">評価 {float(h["review"]):.1f}({int(h["count"] or 0)}件)</span>' if h.get("review") else ""
+        return f'<li><a href="{e(h["url"])}" target="_blank" rel="sponsored noopener">{img}<span class="kt-hotel-name">{e(h["name"])}</span>{price}{review}</a></li>'
+    return '<ul class="kt-hotels">' + "".join(one(h) for h in hotels) + "</ul>"
+
+
 def rakuten(url):
     """楽天のページへのリンクを、アフィリエイトID付きのリンクに包む"""
     return f"https://hb.afl.rakuten.co.jp/hgc/{RAKUTEN_AFF}/?pc={quote(url, safe='')}&m={quote(url, safe='')}"
@@ -203,7 +275,7 @@ for t in trips:
 
     course = "\n".join(f'          <li><time>{e(c["time"])}</time><span class="dot" aria-hidden="true"></span><span>{e(c["text"])}</span></li>' for c in t["course"])
     tips = '<ul class="kt-tips">' + "".join(f"<li>{e(x)}</li>" for x in t.get("tips", [])) + "</ul>" if t.get("tips") else ""
-    stays = "".join(f'''<div class="kt-stay"><h3>{e(s["name"])}</h3><p>{e(s["note"])}</p><div class="kt-stay-links"><a class="kt-stay-btn" href="{e(travel_link(s.get("travel") or s["name"]))}" target="_blank" rel="sponsored noopener">楽天トラベルで宿を探す</a><a href="{e(map_link(s.get("map") or s["name"]))}" target="_blank" rel="noopener">地図で見る</a></div></div>''' for s in t.get("stay", []))
+    stays = "".join(f'''<div class="kt-stay"><h3>{e(s["name"])}</h3><p>{e(s["note"])}</p>{hotel_cards(fetch_hotels(s.get("travel") or s["name"]))}<div class="kt-stay-links"><a class="kt-stay-btn" href="{e(travel_link(s.get("travel") or s["name"]))}" target="_blank" rel="sponsored noopener">楽天トラベルで宿を探す</a><a href="{e(map_link(s.get("map") or s["name"]))}" target="_blank" rel="noopener">地図で見る</a></div></div>''' for s in t.get("stay", []))
     sake_links = [f'<a href="{IKKON}index.html#{e(s["id"])}">{e(s["name"])}を一献で見る</a>' for s in t.get("ikkon", [])]
     sake_links.append(f'<a href="{IKKON}kura.html#{e(k["id"])}">{e(k["name"])}の紹介(一献)</a>')
     if k.get("url"):
@@ -419,4 +491,6 @@ tail = f'<script src="assets/filter.js?v={VERSION}"></script>\n'
 ld = {"@context": "https://schema.org", "@type": "WebSite", "name": "蔵旅 by 一献", "url": SITE}
 head = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
 (ROOT / "index.html").write_text(shell("蔵旅 by 一献|酒蔵をたずねる旅のしおり", f"宮城の酒蔵をたずね、蔵のまわりの見どころと一日の旅程を紹介する旅のしおり。いまは{len(trips)}編。", body, "", home=True, extra_head=head, tail=tail), encoding="utf-8")
+(ROOT / "rakuten-status.json").write_text(json.dumps(rk_status, ensure_ascii=False, indent=1), encoding="utf-8")
 print("蔵旅", len(trips), "編")
+print("楽天トラベル: 取得", len(rk_status["ok"]), "/ 空", len(rk_status["empty"]), "/ エラー", len(rk_status["errors"]))

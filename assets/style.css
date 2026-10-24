@@ -626,7 +626,7 @@ body::after {
 .kt-course span { font-size: 15px; }
 .kt-tips { margin: 6px 0 0; padding-left: 1.2em; font-size: 14px; color: var(--muted); display: grid; gap: 6px; }
 .kt-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; }
-.kt-stays { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.kt-stays { display: grid; gap: 14px; }
 .kt-stay { display: grid; gap: 6px; align-content: start; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--kin); border-radius: var(--radius-in); padding: 16px 18px; min-width: 0; }
 .kt-stay h3 { font-size: 19px; }
 .kt-stay p { margin: 0; font-size: 14px; color: var(--muted); }
@@ -650,3 +650,13 @@ body::after {
   .kt-spot { grid-template-columns: 34px minmax(0, 1fr); gap: 12px; }
   .kt-num { width: 30px; height: 30px; }
 }
+
+/* 楽天トラベルの宿 */
+.kt-hotels { list-style: none; margin: 8px 0 4px; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.kt-hotels a { display: grid; gap: 4px; align-content: start; height: 100%; text-decoration: none; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-in); overflow: hidden; padding-bottom: 8px; }
+.kt-hotels a:hover { border-color: var(--ai); }
+.kt-hotels img, .kt-hotel-noimg { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: var(--ai-soft); max-width: 100%; }
+.kt-hotel-name { font-family: var(--font-display); font-weight: 700; font-size: 14.5px; line-height: 1.45; padding: 2px 10px 0; }
+.kt-hotels b { font-size: 13.5px; color: var(--ai); padding: 0 10px; font-variant-numeric: tabular-nums; }
+.kt-hotel-review { font-size: 12px; color: var(--muted); padding: 0 10px; }
+@media (max-width: 720px) { .kt-hotels { grid-template-columns: 1fr; } .kt-hotels a { grid-template-columns: 110px minmax(0, 1fr); grid-auto-rows: min-content; column-gap: 10px; padding: 0; } .kt-hotels img, .kt-hotel-noimg { grid-row: span 3; aspect-ratio: 1; height: 100%; } .kt-hotel-name, .kt-hotels b, .kt-hotel-review { padding: 0; } .kt-hotel-name { padding-top: 8px; } }
