@@ -630,7 +630,9 @@ body::after {
 .kt-stay { display: grid; gap: 6px; align-content: start; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--kin); border-radius: var(--radius-in); padding: 16px 18px; min-width: 0; }
 .kt-stay h3 { font-size: 19px; }
 .kt-stay p { margin: 0; font-size: 14px; color: var(--muted); }
-.kt-stay a { font-size: 13.5px; justify-self: start; }
+.kt-stay-links { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 6px; font-size: 13.5px; }
+.kt-stay-btn { display: inline-flex; align-items: center; min-height: 40px; padding: 6px 16px; border-radius: 999px; background: var(--ai); color: var(--on-ai) !important; text-decoration: none; font-weight: 700; }
+.kt-pr { font-size: 12px; color: var(--muted); margin: -4px 0 12px; }
 .kt-next { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
 
 @media (max-width: 720px) {

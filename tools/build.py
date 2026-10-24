@@ -13,10 +13,11 @@ import sys
 from pathlib import Path
 from urllib.parse import quote
 
-VERSION = "2"
+VERSION = "3"
 SITE = "https://rehab-info.github.io/kuratabi/"  # 蔵旅の住所(独自ドメインに移したらここを直す)
 IKKON = "https://rehab-info.github.io/ikkon/"    # 一献の住所
 LEAFLET = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/"
+RAKUTEN_AFF = "58c36830.1e80c147.58c36831.fb6bd4b1"  # 楽天アフィリエイトID
 
 ROOT = Path(__file__).resolve().parent.parent
 data = json.loads((ROOT / "data/kuratabi.json").read_text(encoding="utf-8"))
@@ -120,12 +121,22 @@ def shell(title, desc, body, path, home=False, extra_head="", tail=""):
   <div class="wrap">
     <span>見学の受け入れや店の営業は変わることがあります。出かける前に必ず各蔵・各施設へ確かめてください。情報は{e(data["checked"])}に確認しました。</span>
     <span>試飲をする日は、電車やバス、運転しない人と。お酒は20歳になってから。飲酒運転は法律で禁止されています。</span>
+    <span>当サイトは楽天アフィリエイトなどの広告を利用しています。予約のリンクから得た収益は、サイトの運営に使います。</span>
     <span>蔵旅は、日本酒案内「<a href="{IKKON}">一献</a>」の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
   </div>
 </footer>
 {tail}</body>
 </html>
 '''
+
+
+def rakuten(url):
+    """楽天のページへのリンクを、アフィリエイトID付きのリンクに包む"""
+    return f"https://hb.afl.rakuten.co.jp/hgc/{RAKUTEN_AFF}/?pc={quote(url, safe='')}&m={quote(url, safe='')}"
+
+
+def travel_link(q):
+    return rakuten(f"https://kw.travel.rakuten.co.jp/keyword/Search.do?charset=utf-8&f_query={quote(q)}")
 
 
 def map_link(q):
@@ -192,7 +203,7 @@ for t in trips:
 
     course = "\n".join(f'          <li><time>{e(c["time"])}</time><span class="dot" aria-hidden="true"></span><span>{e(c["text"])}</span></li>' for c in t["course"])
     tips = '<ul class="kt-tips">' + "".join(f"<li>{e(x)}</li>" for x in t.get("tips", [])) + "</ul>" if t.get("tips") else ""
-    stays = "".join(f'''<div class="kt-stay"><h3>{e(s["name"])}</h3><p>{e(s["note"])}</p><a href="{e(map_link(s.get("map") or s["name"]))}" target="_blank" rel="noopener">宿を地図で探す</a></div>''' for s in t.get("stay", []))
+    stays = "".join(f'''<div class="kt-stay"><h3>{e(s["name"])}</h3><p>{e(s["note"])}</p><div class="kt-stay-links"><a class="kt-stay-btn" href="{e(travel_link(s.get("travel") or s["name"]))}" target="_blank" rel="sponsored noopener">楽天トラベルで宿を探す</a><a href="{e(map_link(s.get("map") or s["name"]))}" target="_blank" rel="noopener">地図で見る</a></div></div>''' for s in t.get("stay", []))
     sake_links = [f'<a href="{IKKON}index.html#{e(s["id"])}">{e(s["name"])}を一献で見る</a>' for s in t.get("ikkon", [])]
     sake_links.append(f'<a href="{IKKON}kura.html#{e(k["id"])}">{e(k["name"])}の紹介(一献)</a>')
     if k.get("url"):
@@ -304,6 +315,7 @@ for t in trips:
   {f"""<section class="section">
     <div class="wrap">
       <div class="section-head"><h2>泊まるなら</h2><p>旅を一泊にのばすなら</p></div>
+      <p class="kt-pr">このコーナーのリンクは広告(楽天アフィリエイト)です。</p>
       <div class="kt-stays">{stays}</div>
     </div>
   </section>""" if stays else ""}
