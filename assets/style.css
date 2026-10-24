@@ -630,7 +630,12 @@ body::after {
 .kt-stay { display: grid; gap: 6px; align-content: start; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--kin); border-radius: var(--radius-in); padding: 16px 18px; min-width: 0; }
 .kt-stay h3 { font-size: 19px; }
 .kt-stay p { margin: 0; font-size: 14px; color: var(--muted); }
-.kt-stay a { font-size: 13.5px; justify-self: start; }
+.kt-stay-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 4px; }
+.kt-stay-links a { font-size: 13.5px; }
+.kt-stay-links .kt-stay-book { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 16px; border-radius: 999px;
+  background: var(--ai); color: var(--on-ai); text-decoration: none; font-weight: 700; font-size: 14px; }
+.kt-pr { display: inline-block; vertical-align: middle; margin-left: 8px; padding: 1px 6px; border: 1px solid var(--line); border-radius: 4px;
+  font-family: var(--font-body); font-size: 11px; font-weight: 400; letter-spacing: .04em; color: var(--muted); }
 .kt-next { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
 
 @media (max-width: 720px) {

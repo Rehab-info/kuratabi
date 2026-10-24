@@ -13,10 +13,13 @@ import sys
 from pathlib import Path
 from urllib.parse import quote
 
-VERSION = "2"
+VERSION = "3"
 SITE = "https://rehab-info.github.io/kuratabi/"  # 蔵旅の住所(独自ドメインに移したらここを直す)
 IKKON = "https://rehab-info.github.io/ikkon/"    # 一献の住所
 LEAFLET = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/"
+# 「泊まるなら」の stay[].rakuten に書けるリンク(楽天トラベルのページか、楽天アフィリエイトの管理画面で作ったリンク)
+RAKUTEN = ("https://travel.rakuten.co.jp/", "https://hotel.travel.rakuten.co.jp/")
+AFFILIATE = ("https://hb.afl.rakuten.co.jp/",)
 
 ROOT = Path(__file__).resolve().parent.parent
 data = json.loads((ROOT / "data/kuratabi.json").read_text(encoding="utf-8"))
@@ -63,6 +66,10 @@ for i, t in enumerate(data["trips"], start=1):
         errors += [f"{where}: 見どころ{j}に「{k}」がありません" for k in ["kind", "name", "note"] if not s.get(k)]
         if "geo" in s and bad_geo(s["geo"]):
             errors.append(f"{where}: 見どころ{j}の geo が宮城の範囲を外れています")
+    for j, s in enumerate(t.get("stay", []), start=1):
+        errors += [f"{where}: 泊まるなら{j}に「{k}」がありません" for k in ["name", "note"] if not s.get(k)]
+        if s.get("rakuten") and not s["rakuten"].startswith(RAKUTEN + AFFILIATE):
+            errors.append(f"{where}: 泊まるなら{j}の rakuten は楽天トラベルか楽天アフィリエイトのリンクにしてください")
     for j, c in enumerate(t.get("course", []), start=1):
         errors += [f"{where}: 旅程{j}に「{k}」がありません" for k in ["time", "text"] if not c.get(k)]
     if t.get("kura") in kura_geo and bad_geo(kura_geo[t["kura"]]):
@@ -76,6 +83,8 @@ if errors:
     sys.exit("データに誤りがあります:\n" + "\n".join(errors))
 
 trips = sorted(data["trips"], key=lambda t: kura_order.index(t["kura"]))
+# 提携リンク(アフィリエイト)が1つでもあれば、すべてのページの下にその旨を書く(ステルスマーケティング規制への対応)
+has_affiliate = any(s.get("rakuten", "").startswith(AFFILIATE) for t in trips for s in t.get("stay", []))
 all_tags = []
 for t in trips:
     for g in t.get("tags", []):
@@ -120,12 +129,25 @@ def shell(title, desc, body, path, home=False, extra_head="", tail=""):
   <div class="wrap">
     <span>見学の受け入れや店の営業は変わることがあります。出かける前に必ず各蔵・各施設へ確かめてください。情報は{e(data["checked"])}に確認しました。</span>
     <span>試飲をする日は、電車やバス、運転しない人と。お酒は20歳になってから。飲酒運転は法律で禁止されています。</span>
-    <span>蔵旅は、日本酒案内「<a href="{IKKON}">一献</a>」の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
+{AFFILIATE_NOTE if has_affiliate else ""}    <span>蔵旅は、日本酒案内「<a href="{IKKON}">一献</a>」の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
   </div>
 </footer>
 {tail}</body>
 </html>
 '''
+
+
+AFFILIATE_NOTE = "    <span>蔵旅は楽天アフィリエイトに参加しています。「楽天トラベルで宿を探す」から予約されると、蔵旅に紹介料が入ることがあります(料金は変わりません)。</span>\n"
+
+
+def stay_card(s):
+    """泊まるなら の1件。楽天トラベルのリンクがあればそれを主に、地図は脇に。"""
+    links = []
+    if s.get("rakuten"):
+        rel = "sponsored noopener" if s["rakuten"].startswith(AFFILIATE) else "noopener"
+        links.append(f'<a class="kt-stay-book" href="{e(s["rakuten"])}" target="_blank" rel="{rel}">楽天トラベルで宿を探す</a>')
+    links.append(f'<a href="{e(map_link(s.get("map") or s["name"]))}" target="_blank" rel="noopener">{"地図で見る" if links else "宿を地図で探す"}</a>')
+    return f'''<div class="kt-stay"><h3>{e(s["name"])}</h3><p>{e(s["note"])}</p><div class="kt-stay-links">{"".join(links)}</div></div>'''
 
 
 def map_link(q):
@@ -192,7 +214,8 @@ for t in trips:
 
     course = "\n".join(f'          <li><time>{e(c["time"])}</time><span class="dot" aria-hidden="true"></span><span>{e(c["text"])}</span></li>' for c in t["course"])
     tips = '<ul class="kt-tips">' + "".join(f"<li>{e(x)}</li>" for x in t.get("tips", [])) + "</ul>" if t.get("tips") else ""
-    stays = "".join(f'''<div class="kt-stay"><h3>{e(s["name"])}</h3><p>{e(s["note"])}</p><a href="{e(map_link(s.get("map") or s["name"]))}" target="_blank" rel="noopener">宿を地図で探す</a></div>''' for s in t.get("stay", []))
+    stays = "".join(stay_card(s) for s in t.get("stay", []))
+    stay_pr = '<span class="kt-pr">PR</span>' if any(s.get("rakuten", "").startswith(AFFILIATE) for s in t.get("stay", [])) else ""
     sake_links = [f'<a href="{IKKON}index.html#{e(s["id"])}">{e(s["name"])}を一献で見る</a>' for s in t.get("ikkon", [])]
     sake_links.append(f'<a href="{IKKON}kura.html#{e(k["id"])}">{e(k["name"])}の紹介(一献)</a>')
     if k.get("url"):
@@ -303,7 +326,7 @@ for t in trips:
 
   {f"""<section class="section">
     <div class="wrap">
-      <div class="section-head"><h2>泊まるなら</h2><p>旅を一泊にのばすなら</p></div>
+      <div class="section-head"><h2>泊まるなら{stay_pr}</h2><p>旅を一泊にのばすなら</p></div>
       <div class="kt-stays">{stays}</div>
     </div>
   </section>""" if stays else ""}
