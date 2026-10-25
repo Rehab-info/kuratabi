@@ -12,6 +12,7 @@ data/kuratabi.json  旅のしおりのデータ(ここを編集して旅を追�
 data/kura.json      宮城の蔵のデータ(名前・地域・見学の可否・紹介文など)
 assets/style.css    デザイン
 tools/build.py      ページを作り直すスクリプト
+sitemap.xml         検索エンジン向けのページ一覧(tools/build.py が自動で作る)
 assets/map.js       しおりの地図(Leaflet と OpenStreetMap)
 assets/filter.js    入口の絞り込み
 images/             写真(撮影したもの・許可を得たもの)

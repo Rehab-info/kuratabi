@@ -92,7 +92,11 @@ for t in trips:
             all_tags.append(g)
 
 
+SITEMAP = []  # 作ったページ(sitemap.xml に載せる)
+
+
 def shell(title, desc, body, path, current="", extra_head="", tail=""):
+    SITEMAP.append(path)
     cur = ' aria-current="page"'
     return f'''<!doctype html>
 <html lang="ja">
@@ -108,6 +112,8 @@ def shell(title, desc, body, path, current="", extra_head="", tail=""):
 <meta property="og:description" content="{e(desc)}">
 <meta property="og:url" content="{SITE}{path}">
 <meta property="og:site_name" content="蔵旅 by 一献">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@600;700&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
@@ -568,5 +574,11 @@ tail = '''<script>
 </script>
 '''
 (ROOT / "kura.html").write_text(shell("宮城の蔵|蔵旅 by 一献", f"宮城県の酒蔵{len(kura)}蔵の紹介と見学の受け入れ。旅のしおりのある蔵は、そのまま旅程へ。", body, "kura.html", current="kura", tail=tail), encoding="utf-8")
+# ---------- 検索エンジン向けのページ一覧 ----------
+(ROOT / "sitemap.xml").write_text(
+    '<?xml version="1.0" encoding="UTF-8"?>\n'
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    + "".join(f"  <url><loc>{SITE}{p}</loc></url>\n" for p in sorted(set(SITEMAP)))
+    + "</urlset>\n", encoding="utf-8")
 print("蔵旅", len(trips), "編")
 print("楽天トラベル:", "取得 " + str(len(rk_status["ok"])) + " / 空 " + str(len(rk_status["empty"])) + " / エラー " + str(len(rk_status["errors"])) if RAKUTEN_ON else "止めています")
