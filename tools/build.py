@@ -20,8 +20,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
-VERSION = "6"
-SITE = "https://rehab-info.github.io/kuratabi/"  # 蔵旅の住所(独自ドメインに移したらここを直す)
+VERSION = "7"
 LEAFLET = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/"
 RAKUTEN_ON = False  # 楽天アフィリエイト(宿の予約リンク・宿のカード・広告の表示)を使うときは True にする。いまは止めている
 RAKUTEN_AFF = "58c36830.1e80c147.58c36831.fb6bd4b1"  # 楽天アフィリエイトID
@@ -30,6 +29,16 @@ AD_NOTICE = "    <span>当サイトは楽天アフィリエイトなどの広告
 ROOT = Path(__file__).resolve().parent.parent
 data = json.loads((ROOT / "data/kuratabi.json").read_text(encoding="utf-8"))
 kura = {k["id"]: k for k in json.loads((ROOT / "data/kura.json").read_text(encoding="utf-8"))}
+# 一献のなかま4サービスの住所(独自ドメインに移すときは data/sites.json を直す)
+SITES = json.loads((ROOT / "data/sites.json").read_text(encoding="utf-8"))
+URL = {k: v["url"] for k, v in SITES["sites"].items()}
+SITE = URL["kuratabi"]
+
+
+def family(keys):
+    """フッターに置く「一献のなかま」。keys は data/sites.json の sites のキー。"""
+    links = "".join(f'<a href="{e(URL[k])}" data-site="{k}"><b>{e(SITES["sites"][k]["name"])}</b><small>{e(SITES["sites"][k]["desc"])}</small></a>' for k in keys)
+    return f'<nav class="family" aria-label="一献のなかま"><span class="family-h">一献のなかま</span>{links}</nav>'
 kura_geo = data.get("kuraGeo", {})
 kura_order = list(kura)
 e = html.escape
@@ -81,6 +90,12 @@ for k in kura.values():
         errors.append(f'{k["id"]}: 地域「{k["area"]}」が AREAS にありません')
     if k["tour"] not in TOUR:
         errors.append(f'{k["id"]}: 見学「{k["tour"]}」が TOUR にありません')
+# 一献・カップ酒図鑑は data/sites.json の kuratabiTrips を見てしおりへリンクするので、食い違いを止める
+trip_ids = {t["kura"] for t in data["trips"]}
+if trip_ids != set(SITES["kuratabiTrips"]):
+    errors.append(f'data/sites.json の kuratabiTrips がしおりと合いません(足りない: {sorted(trip_ids - set(SITES["kuratabiTrips"]))}、余分: {sorted(set(SITES["kuratabiTrips"]) - trip_ids)})。3つのリポジトリの data/sites.json を直してください')
+errors += [f'data/sites.json の kuratabiTrips の {i} の名前「{n}」が data/kura.json の「{kura[i]["name"]}」と違います'
+           for i, n in SITES["kuratabiTrips"].items() if i in kura and kura[i]["name"] != n]
 if errors:
     sys.exit("データに誤りがあります:\n" + "\n".join(errors))
 
@@ -135,7 +150,8 @@ def shell(title, desc, body, path, current="", extra_head="", tail=""):
   <div class="wrap">
     <span>見学の受け入れや店の営業は変わることがあります。出かける前に必ず各蔵・各施設へ確かめてください。情報は{e(data["checked"])}に確認しました。</span>
     <span>試飲をする日は、電車やバス、運転しない人と。お酒は20歳になってから。飲酒運転は法律で禁止されています。</span>
-{AD_NOTICE}    <span>蔵旅は、日本酒案内「一献」がつくる酒蔵の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
+{AD_NOTICE}    <span>蔵旅は、日本酒案内「<a href="{e(URL["ikkon"])}">一献</a>」がつくる酒蔵の旅のしおりです。地図 © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors</span>
+    {family(["ikkon", "cupzukan"])}
   </div>
 </footer>
 {tail}</body>
@@ -291,7 +307,9 @@ for t in trips:
                 f'<div class="kt-stay-links"><a class="kt-stay-btn" href="{e(travel_link(kw))}" target="_blank" rel="sponsored noopener">楽天トラベルで宿を探す</a>{maplink}</div></div>')
     stays = "".join(stay_html(s) for s in t.get("stay", []))
     sake_note = f'<p class="kt-body">旅のおともに:{"、".join(e(s) for s in t["sakes"])}</p>' if t.get("sakes") else ""
-    sake_links = [f'<a href="kura.html#{e(k["id"])}">宮城の蔵の一覧で見る</a>']
+    sake_links = [f'<a href="kura.html#{e(k["id"])}">宮城の蔵の一覧で見る</a>',
+                  f'<a href="{e(URL["ikkon"])}kura.html#{e(k["id"])}">この蔵の酒を一献で見る</a>',
+                  f'<a href="{e(URL["cupzukan"])}kura.html">宮城のカップ酒(カップ酒図鑑)</a>']
     if k.get("url"):
         sake_links.append(f'<a href="{e(k["url"])}" target="_blank" rel="noopener">蔵の公式サイト</a>')
     nexts = "".join(f'''<a class="kt-trip kt-trip-sm" href="{e(o["kura"])}.html">{cover(o, kura[o["kura"]], "sm")}<div class="kt-trip-body"><small>{e(kura[o["kura"]]["city"])} ・ {e(o["length"])}</small><h3>{e(o["title"])}</h3></div></a>'''
